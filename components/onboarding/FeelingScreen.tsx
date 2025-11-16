@@ -118,7 +118,7 @@ export default function FeelingScreen({ selectedFeeling, onNext, onBack }: Feeli
           Next
         </button>
         <button
-          onClick={onNext}
+          onClick={() => onNext("")}
           className="w-full text-gray-600 hover:text-gray-900 text-sm py-2 transition-colors"
         >
           Skip
