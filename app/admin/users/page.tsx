@@ -56,7 +56,7 @@ export default async function AdminUsersPage() {
                   </Button>
                 </Link>
                 <Link href="/analyze">
-                  <Button variant="outline" size="4">
+                  <Button variant="ghost" size="4">
                     Go to Meal Analysis
                   </Button>
                 </Link>
