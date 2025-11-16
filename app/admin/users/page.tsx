@@ -46,7 +46,7 @@ export default async function AdminUsersPage() {
             
             <div className="space-y-4">
               <p className="text-3 text-gray-10">
-                <strong>Current User:</strong> {currentUser.name || currentUser.email || `@${currentUser.username}`}
+                <strong>Current User:</strong> {currentUser.name || `@${currentUser.username}` || userId}
               </p>
               
               <div className="flex gap-4 justify-center">
