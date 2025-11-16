@@ -1,31 +1,30 @@
-import { Button } from "@whop/react/components";
-import Link from "next/link";
+"use client";
 
-export default function Page() {
-	return (
-		<div className="py-12 px-4 sm:px-6 lg:px-8">
-			<div className="max-w-2xl mx-auto rounded-3xl bg-gray-a2 p-4 border border-gray-a4">
-				<div className="text-center mt-8 mb-12">
-					<h1 className="text-8 font-bold text-gray-12 mb-4">
-						Welcome to Your Whop App
-					</h1>
-					<p className="text-4 text-gray-10">
-						Learn how to build your application on our docs
-					</p>
-				</div>
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-				<div className="justify-center flex w-full">
-					<Link
-						href="https://docs.whop.com/apps"
-						className="w-full"
-						target="_blank"
-					>
-						<Button variant="classic" className="w-full" size="4">
-							Developer Docs
-						</Button>
-					</Link>
-				</div>
-			</div>
-		</div>
-	);
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if onboarding is completed
+    const completed = localStorage.getItem("onboarding_completed");
+    if (completed === "true") {
+      // Redirect to dashboard if onboarding is done
+      router.push("/dashboard");
+    } else {
+      // Redirect to onboarding if not completed
+      router.push("/onboarding");
+    }
+  }, [router]);
+
+  // Show loading state while redirecting
+  return (
+    <main className="flex flex-col items-center justify-center h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </main>
+  );
 }

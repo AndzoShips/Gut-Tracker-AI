@@ -1,0 +1,26 @@
+# Whop App Configuration Template
+# Copy this content to a new file called .env.local in the root directory
+# Get these values from your Whop App dashboard at https://whop.com/apps
+
+# Your Whop App ID (public)
+NEXT_PUBLIC_WHOP_APP_ID=your_app_id_here
+
+# Your Whop API Key (private - keep this secret!)
+WHOP_API_KEY=your_api_key_here
+
+# Your Whop Webhook Secret (private - keep this secret!)
+WHOP_WEBHOOK_SECRET=your_webhook_secret_here
+
+# Optional: Custom domain for your app (if you have one)
+# NEXT_PUBLIC_APP_URL=https://yourdomain.com
+
+# OpenAI API Key for meal analysis
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+# Development Mode (Optional - for local testing without Whop auth)
+# Set to "true" to bypass Whop authentication in development
+# DEV_BYPASS_AUTH=true

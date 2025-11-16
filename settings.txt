@@ -1,0 +1,4 @@
+root: "C:\Users\NVC\Gutly\whop-app" 
+path: C:\Program Files\nodejs 
+arch: 64 
+proxy: none
