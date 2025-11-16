@@ -79,6 +79,15 @@ export async function DELETE(req: Request) {
       );
     }
 
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.error("❌ Supabase client is null!");
+      return NextResponse.json(
+        { error: "Database not configured" },
+        { status: 500 }
+      );
+    }
+
     // Delete the meal (RLS will ensure user can only delete their own meals)
     const { error } = await supabase
       .from("meals")
