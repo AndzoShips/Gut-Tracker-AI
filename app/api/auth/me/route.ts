@@ -15,15 +15,14 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({
-      authenticated: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        username: user.username,
-      },
-    });
+        return NextResponse.json({
+          authenticated: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+          },
+        });
   } catch (error) {
     console.error("Error getting current user:", error);
     return NextResponse.json(
