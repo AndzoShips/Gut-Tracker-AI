@@ -9,6 +9,10 @@ interface DailyTargetScoreProps {
   trendMessage: string;
 }
 
+const BRAND_COLOR = "#3AB368";
+const TRACK_COLOR = "#E3F3EE";
+const BRAND_GRADIENT = "linear-gradient(to right, #3AB368, #2E9153)";
+
 export default function DailyTargetScore({
   targetScore,
   currentScore,
@@ -62,7 +66,7 @@ export default function DailyTargetScore({
           <div
             className="absolute inset-0 rounded-xl opacity-20 blur-xl pointer-events-none"
             style={{
-              background: `radial-gradient(circle at center, #4DC277, transparent)`,
+              background: `radial-gradient(circle at center, ${BRAND_COLOR}, transparent)`,
             }}
           />
         )}
@@ -90,7 +94,7 @@ export default function DailyTargetScore({
                   cx="55"
                   cy="55"
                   r="45"
-                  stroke="#e5e7eb"
+                  stroke={TRACK_COLOR}
                   strokeWidth="6"
                   fill="none"
                 />
@@ -99,7 +103,7 @@ export default function DailyTargetScore({
                   cx="55"
                   cy="55"
                   r="45"
-                  stroke={isHighProgress ? "#3AB368" : "#4DC277"}
+                  stroke={BRAND_COLOR}
                   strokeWidth="6"
                   fill="none"
                   strokeLinecap="round"
@@ -107,40 +111,21 @@ export default function DailyTargetScore({
                   initial={{ strokeDashoffset: circumference }}
                   animate={{ strokeDashoffset: offset }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  style={
-                    isHighProgress
-                      ? {
-                          filter: `drop-shadow(0 0 6px ${isHighProgress ? "#3AB368" : "#4DC277"}80)`,
-                        }
-                      : {}
-                  }
+                  style={{
+                    filter: `drop-shadow(0 0 6px ${BRAND_COLOR}80)`,
+                  }}
                 />
               </svg>
               {/* Percentage in center */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
                   className="text-lg font-bold"
-                  style={{ color: isHighProgress ? "#3AB368" : "#4DC277" }}
+                  style={{ color: BRAND_COLOR }}
                 >
                   {Math.round(progress)}%
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* Progress Bar (Alternative visual) */}
-          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full rounded-full"
-              style={{
-                background: isHighProgress
-                  ? "linear-gradient(to right, #3AB368, #4DC277)"
-                  : "linear-gradient(to right, #4DC277, #6DD88A)",
-              }}
-            />
           </div>
 
           {/* Motivational Message */}

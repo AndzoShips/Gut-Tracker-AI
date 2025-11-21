@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Modal, Button, Progress } from "@whop/frosted-ui";
 import StatCard from "./StatCard";
 import MealInsightCard from "./MealInsightCard";
 
@@ -19,6 +20,12 @@ interface Analysis {
   mental_clarity_score?: number;
   energy_score?: number;
   digestion_score?: number;
+  wellness_insights?: {
+    mood_insight?: string;
+    mental_clarity_insight?: string;
+    energy_insight?: string;
+    digestion_insight?: string;
+  };
   gut_insights?: Record<string, string>;
   mental_insights?: Record<string, string>;
   gut_score?: number;
@@ -36,7 +43,7 @@ interface MealAnalysisModalProps {
   isOpen: boolean;
   onClose: () => void;
   image: string;
-  initialResult?: any; // Pre-computed result to display
+  initialResult?: any;
   onAnalysisComplete: () => void;
   onAnalysisStart?: () => void;
   onAnalysisError?: () => void;
@@ -55,8 +62,6 @@ export default function MealAnalysisModal({
   const [result, setResult] = useState<Analysis | null>(initialResult?.error ? null : initialResult || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(initialResult?.error || null);
-  const [gutInsightsOpen, setGutInsightsOpen] = useState(true);
-  const [mentalInsightsOpen, setMentalInsightsOpen] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -67,7 +72,6 @@ export default function MealAnalysisModal({
   const analyzeImage = async () => {
     if (!image) return;
 
-    // Clear any existing interval
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);
       progressIntervalRef.current = null;
@@ -80,12 +84,10 @@ export default function MealAnalysisModal({
     setProgress(0);
     setLoadingMessage("Analyzing your meal...");
     
-    // Notify parent that analysis has started
     if (onAnalysisStart) {
       onAnalysisStart();
     }
 
-    // Progress simulation with messages
     const messages = [
       { progress: 20, text: "Identifying ingredients..." },
       { progress: 40, text: "Analyzing nutritional content..." },
@@ -101,7 +103,7 @@ export default function MealAnalysisModal({
         setLoadingMessage(messages[messageIndex].text);
         messageIndex++;
       }
-    }, 800); // Update every 800ms
+    }, 800);
 
     try {
       const response = await fetch("/api/analyze", {
@@ -120,11 +122,9 @@ export default function MealAnalysisModal({
         }
         setProgress(100);
         setLoadingMessage("Analysis complete!");
-        // Small delay to show 100% before showing results
         setTimeout(() => {
           setResult(data);
           setLoading(false);
-          // Notify parent that analysis is complete
           if (onAnalysisComplete) {
             onAnalysisComplete();
           }
@@ -154,7 +154,6 @@ export default function MealAnalysisModal({
     }
   };
 
-  // If we have initialResult, use it instead of analyzing
   useEffect(() => {
     if (initialResult) {
       if (initialResult.error) {
@@ -167,12 +166,10 @@ export default function MealAnalysisModal({
     }
   }, [initialResult]);
 
-  // Auto-analyze when image is provided (only if no initialResult)
   useEffect(() => {
     if (!isOpen || !image || initialResult) return;
     analyzeImage();
 
-    // Cleanup on unmount
     return () => {
       if (progressIntervalRef.current) {
         clearInterval(progressIntervalRef.current);
@@ -184,7 +181,7 @@ export default function MealAnalysisModal({
 
   const handleSaveMeal = async () => {
     if (!result || saved || result.id) {
-      return; // Already saved or no result
+      return;
     }
 
     setSaving(true);
@@ -206,6 +203,7 @@ export default function MealAnalysisModal({
           mental_score: result.mental_score,
           overall_score: result.overall_score,
           short_verdict: result.short_verdict,
+          wellness_insights: result.wellness_insights || null,
           gut_insights: result.gut_insights,
           mental_insights: result.mental_insights,
           reasons: result.reasons || [],
@@ -217,7 +215,6 @@ export default function MealAnalysisModal({
       let data;
       try {
         const responseText = await response.text();
-        console.log("Save meal raw response:", responseText, "Status:", response.status);
         data = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
         console.error("Failed to parse response:", parseError);
@@ -227,26 +224,15 @@ export default function MealAnalysisModal({
       
       if (response.ok) {
         setSaved(true);
-        // Update result with saved ID
         setResult({ ...result, id: data.id || data.meal?.id });
-        // Refresh dashboard immediately after saving
         onAnalysisComplete();
-        console.log("Meal saved successfully with ID:", data.id || data.meal?.id);
-        if (data.warning) {
-          console.warn("Warning:", data.warning);
-        }
       } else {
-        console.error("Save meal failed:", data);
-        console.error("Response status:", response.status);
         if (response.status === 409) {
-          // Already saved
           setSaved(true);
           setResult({ ...result, id: data.id });
-          console.log("Meal already saved with ID:", data.id);
         } else {
           const errorMessage = data.error || data.details || `Failed to save meal (${response.status})`;
           setError(errorMessage);
-          console.error("Error details:", data);
         }
       }
     } catch (err) {
@@ -258,11 +244,9 @@ export default function MealAnalysisModal({
   };
 
   const handleClose = () => {
-    // Only refresh dashboard if meal was saved
     if (result?.id || saved) {
       onAnalysisComplete();
     }
-    // Reset state
     setResult(null);
     setError(null);
     setSaved(false);
@@ -277,48 +261,38 @@ export default function MealAnalysisModal({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 z-50 overflow-y-auto"
-        onClick={(e) => {
-          // Only close on backdrop click if not saving
-          if (!saving && !loading) {
-            handleClose();
-          }
-        }}
-      >
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            onClick={(e) => e.stopPropagation()}
-            className="rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
-            style={{
-              background: "linear-gradient(to bottom, #FFFFFF, #F9FFFB)",
-            }}
-          >
+    <Modal
+      open={isOpen}
+      onClose={(open) => !open && !saving && !loading && handleClose()}
+      className="!max-w-2xl dark:!bg-gray-800"
+      header={loading ? {
+        title: "Analyzing Your Meal",
+        closeButton: false,
+      } : error ? {
+        title: "Analysis Error",
+        closeButton: true,
+      } : {
+        title: "",
+        closeButton: false,
+      }}
+      body={{
+        children: (
+          <div className="max-h-[85vh] overflow-y-auto hide-scrollbar bg-white dark:bg-gray-800">
             {loading && (
-              <div className="p-12">
-                <div className="text-center mb-8">
+              <div className="space-y-6 p-8">
+                <div className="flex flex-col items-center mb-8">
                   {/* Animated Icon */}
-                  <div className="relative w-24 h-24 mx-auto mb-6">
-                    <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+                  <div className="relative w-24 h-24 mb-6">
+                    <div className="absolute inset-0 rounded-full border-4 border-green-500/20"></div>
                     <motion.div
-                      className="absolute inset-0 rounded-full border-4 border-secondary border-t-transparent"
+                      className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-green-500/10">
+                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
@@ -326,17 +300,18 @@ export default function MealAnalysisModal({
                   </div>
 
                   {/* Main Message */}
-                  <motion.p
+                  <motion.div
                     key={loadingMessage}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-xl font-bold text-gray-900 mb-3"
                   >
-                    {loadingMessage}
-                  </motion.p>
+                    <h2 className="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">
+                      {loadingMessage}
+                    </h2>
+                  </motion.div>
                   
                   {/* Sub Message */}
-                  <p className="text-sm text-gray-600 mb-8">
+                  <p className="text-sm mb-8 text-gray-600 dark:text-gray-400">
                     Our AI is carefully examining your meal
                   </p>
                 </div>
@@ -344,32 +319,26 @@ export default function MealAnalysisModal({
                 {/* Progress Bar */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Progress</span>
-                    <span className="text-sm font-semibold text-secondary">{progress}%</span>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{progress}%</p>
                   </div>
-                  <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-secondary to-green-400 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                  </div>
+                  <Progress value={progress} max={100} className="h-3 brand-progress" />
                   
                   {/* Helpful Tips */}
-                  <div className="mt-6 space-y-2">
+                  <div className="mt-6">
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
-                      className="flex items-start gap-3 p-3 bg-green-50 rounded-xl border border-green-100"
                     >
-                      <svg className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-sm text-gray-700">
-                        We're analyzing how this meal affects your gut health, mood, energy, and mental clarity.
-                      </p>
+                      <div className="flex items-start gap-3 p-3 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                        <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                          We're analyzing how this meal affects your gut health, mood, energy, and mental clarity.
+                        </p>
+                      </div>
                     </motion.div>
                   </div>
                 </div>
@@ -377,146 +346,110 @@ export default function MealAnalysisModal({
             )}
 
             {error && (
-              <div className="p-8 text-center">
-                <div className="text-red-500 text-4xl mb-4">⚠️</div>
-                <p className="text-lg font-semibold text-gray-900 mb-2">Analysis Failed</p>
-                <p className="text-gray-600 mb-6">{error}</p>
-                <button
+              <div className="flex flex-col items-center p-8">
+                <p className="text-4xl mb-4">⚠️</p>
+                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Analysis Failed</h3>
+                <p className="text-sm mb-6 text-gray-600 dark:text-gray-400">{error}</p>
+                <Button
                   onClick={() => {
                     setError(null);
                     analyzeImage();
                   }}
-                  className="bg-secondary hover:bg-green-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+                  variant="solid"
+                  size="4"
                 >
                   Try Again
-                </button>
+                </Button>
               </div>
             )}
 
             {result && !loading && !error && (
-              <div className="p-6" style={{ background: "linear-gradient(to bottom, #FFFFFF, #F9FFFB)" }}>
-                {/* Meal Image with Gradient Background */}
+              <div className="space-y-6">
+                {/* Header with Back and Share Buttons */}
+                <div className="flex items-center justify-between px-6 pt-4">
+                  <button
+                    onClick={handleClose}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    {result.title || "Meal Analysis"}
+                  </h2>
+                  <button
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Meal Image with Score Badge in Bottom Right */}
                 {image && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="relative mb-6 rounded-xl overflow-hidden shadow-lg"
-                    style={{
-                      background: "linear-gradient(to bottom, #E9F8EE, #FFFFFF)",
-                    }}
+                    className="relative px-6"
                   >
                     <img
                       src={image}
                       alt={result.title || "Meal"}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-64 object-cover rounded-xl"
                     />
                     {result.overall_score !== undefined && (
                       <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.3, type: "spring" }}
-                        className={`absolute top-6 right-6 text-white px-6 py-3 rounded-2xl text-xl font-bold flex items-center gap-3 shadow-2xl backdrop-blur-sm ${
-                          result.overall_score >= 75
-                            ? "bg-green-500/95"
-                            : result.overall_score >= 50
-                              ? "bg-yellow-500/95"
-                              : "bg-red-500/95"
-                        }`}
-                        style={{
-                          animation:
-                            result.overall_score < 40 || result.overall_score > 75
-                              ? "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-                              : undefined,
-                          border: "2px solid rgba(255, 255, 255, 0.3)",
-                        }}
+                        className="absolute bottom-4 right-10 px-4 py-2 rounded-xl text-lg font-bold flex items-center gap-2 shadow-2xl backdrop-blur-md bg-green-500 text-white"
                       >
-                        {result.overall_score >= 75 ? (
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ) : (
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        )}
-                        <span className="text-2xl">{result.overall_score}%</span>
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span>{result.overall_score}%</span>
                       </motion.div>
                     )}
                   </motion.div>
                 )}
 
-                {/* Meal Title */}
-                {result.title && (
-                  <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-gray-900">{result.title}</h2>
+                {/* Detected Ingredients */}
+                {result.detected_ingredients && result.detected_ingredients.length > 0 && (
+                  <div className="px-6">
+                    <h3 className="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">Detected Ingredients</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {result.detected_ingredients.slice(0, 6).map((ingredient: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1.5 rounded-full bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200 dark:border-gray-600 text-sm text-gray-900 dark:text-gray-100"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                {/* Summary Box */}
-                {result.short_verdict && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="mb-6 rounded-xl p-4 shadow-sm border border-yellow-200/50"
-                    style={{
-                      background: "linear-gradient(to bottom right, #FEF3C7, #FDE68A)",
-                    }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="text-2xl flex-shrink-0">💡</div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                          How This Meal Affects You Today
-                        </h3>
-                        <p className="text-sm text-gray-700 leading-relaxed">{result.short_verdict}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Nutrient Impact Grid */}
-                <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
-                    Nutrient Impact
-                  </h3>
+                {/* Wellness Impact Scores */}
+                <div className="px-6 pb-6">
+                  <h3 className="text-sm font-semibold mb-4 text-gray-900 dark:text-gray-100">Wellness Impact Scores</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {result.mood_score !== undefined && (
                       <StatCard
                         title="Mood"
                         value={result.mood_score}
-                        icon={
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        }
+                        icon="😊"
                         index={0}
                       />
                     )}
                     {result.mental_clarity_score !== undefined && (
                       <StatCard
-                        title="Focus"
+                        title="Mental Clarity"
                         value={result.mental_clarity_score}
-                        icon={
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                            />
-                          </svg>
-                        }
+                        icon="🧠"
                         index={1}
                       />
                     )}
@@ -524,16 +457,7 @@ export default function MealAnalysisModal({
                       <StatCard
                         title="Energy"
                         value={result.energy_score}
-                        icon={
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 10V3L4 14h7v7l9-11h-7z"
-                            />
-                          </svg>
-                        }
+                        icon="⚡"
                         index={2}
                       />
                     )}
@@ -541,190 +465,121 @@ export default function MealAnalysisModal({
                       <StatCard
                         title="Digestion"
                         value={result.digestion_score}
-                        icon={
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                            />
-                          </svg>
-                        }
+                        icon="❤️"
                         index={3}
                       />
                     )}
                   </div>
                 </div>
 
-                {/* Personalized Insights Cards */}
-                {result.personalized_insights?.insights && result.personalized_insights.insights.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Personalized Insights</h3>
-                    <div className="space-y-3">
-                      {result.personalized_insights.insights.map((insight, index) => (
-                        <MealInsightCard
-                          key={index}
-                          type={insight.type}
-                          message={insight.message}
-                          index={index}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Wellness Category Insights - Always visible */}
+                {result.wellness_insights && (
+                  <div className="px-6 space-y-4 pb-4">
+                    {/* Mood Insight */}
+                    {result.mood_score !== undefined && result.wellness_insights.mood_insight && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">😊</span>
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Mood Insight</span>
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.mood_insight}</p>
+                      </div>
+                    )}
 
-                {/* Detailed Insights (Collapsible) */}
-                {result.gut_insights && (
-                  <div 
-                    className="rounded-xl p-4 mb-4 border border-green-300/50"
-                    style={{
-                      background: "linear-gradient(to bottom right, #D1FAE5, #A7F3D0)",
-                    }}
-                  >
-                    <button
-                      onClick={() => setGutInsightsOpen(!gutInsightsOpen)}
-                      className="w-full flex items-center justify-between mb-2"
-                    >
-                      <h3 className="font-semibold text-gray-900">🦠 Detailed Gut Insights</h3>
-                      <svg
-                        className={`w-5 h-5 text-gray-600 transition-transform ${gutInsightsOpen ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    {gutInsightsOpen && (
-                      <div className="space-y-2 text-sm text-gray-700">
-                        {Object.entries(result.gut_insights).slice(0, 3).map(([k, v]) => (
-                          <p key={k}>• {v}</p>
-                        ))}
+                    {/* Mental Clarity Insight */}
+                    {result.mental_clarity_score !== undefined && result.wellness_insights.mental_clarity_insight && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">🧠</span>
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Mental Clarity Insight</span>
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.mental_clarity_insight}</p>
+                      </div>
+                    )}
+
+                    {/* Energy Insight */}
+                    {result.energy_score !== undefined && result.wellness_insights.energy_insight && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">⚡</span>
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Energy Insight</span>
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.energy_insight}</p>
+                      </div>
+                    )}
+
+                    {/* Digestion Insight */}
+                    {result.digestion_score !== undefined && result.wellness_insights.digestion_insight && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">❤️</span>
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Digestion Insight</span>
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.digestion_insight}</p>
                       </div>
                     )}
                   </div>
-                )}
-
-                {result.mental_insights && (
-                  <div 
-                    className="rounded-xl p-4 mb-6 border border-blue-300/50"
-                    style={{
-                      background: "linear-gradient(to bottom right, #DBEAFE, #BFDBFE)",
-                    }}
-                  >
-                    <button
-                      onClick={() => setMentalInsightsOpen(!mentalInsightsOpen)}
-                      className="w-full flex items-center justify-between mb-2"
-                    >
-                      <h3 className="font-semibold text-gray-900">🧠 Detailed Mental Insights</h3>
-                      <svg
-                        className={`w-5 h-5 text-gray-600 transition-transform ${mentalInsightsOpen ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    {mentalInsightsOpen && (
-                      <div className="space-y-2 text-sm text-gray-700">
-                        {Object.entries(result.mental_insights).slice(0, 3).map(([k, v]) => (
-                          <p key={k}>• {v}</p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Better Choice Recommendation */}
-                {result.alternatives && result.alternatives.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="mb-6 rounded-xl p-4 border border-green-300/50 shadow-sm"
-                    style={{
-                      background: "linear-gradient(to bottom right, #D1FAE5, #A7F3D0)",
-                    }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="text-2xl flex-shrink-0">🍎</div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-2">Try This Next Time</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">
-                          {result.alternatives[0]}
-                        </p>
-                        {result.overall_score !== undefined && result.overall_score < 70 && (
-                          <div className="mt-2 flex items-center gap-2 text-xs text-green-700 font-medium">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span>Could improve your score by +{Math.round((70 - result.overall_score) * 0.3)} points</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-3">
-                  {result.id ? (
-                    <button
-                      onClick={handleViewDetails}
-                      className="flex-1 bg-secondary hover:bg-green-600 text-white py-3 rounded-xl font-semibold transition-colors"
+                <div className="px-6 pb-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+                  <div className="flex flex-col gap-3">
+                    {result.id ? (
+                      <Button
+                        onClick={handleViewDetails}
+                        variant="solid"
+                        size="4"
+                        className="w-full justify-center font-semibold"
+                      >
+                        View Details
+                      </Button>
+                    ) : saved ? (
+                      <Button
+                        disabled
+                        variant="soft"
+                        size="4"
+                        className="w-full justify-center font-semibold"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Saved
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleSaveMeal}
+                        disabled={saving}
+                        variant="solid"
+                        size="4"
+                        className="w-full justify-center font-semibold"
+                      >
+                        {saving ? (
+                          <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                            Saving...
+                          </>
+                        ) : (
+                          "Save Meal"
+                        )}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={handleClose}
+                      variant="soft"
+                      size="4"
+                      className="w-full justify-center font-semibold"
                     >
-                      View Details
-                    </button>
-                  ) : saved ? (
-                    <button
-                      disabled
-                      className="flex-1 bg-green-100 text-green-700 py-3 rounded-xl font-semibold cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Saved
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleSaveMeal}
-                      disabled={saving}
-                      className="flex-1 bg-secondary hover:bg-green-600 text-white py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {saving ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                          Saving...
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          Save Meal
-                        </>
-                      )}
-                    </button>
-                  )}
-                  <button
-                    onClick={handleClose}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-xl font-semibold transition-colors"
-                  >
-                    {result.id || saved ? "Done" : "Close"}
-                  </button>
+                      {result.id || saved ? "Done" : "Close"}
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
-          </motion.div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+          </div>
+        ),
+      }}
+    />
   );
 }
+
 

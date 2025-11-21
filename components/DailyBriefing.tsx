@@ -136,21 +136,13 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
       transition={{ duration: 0.5, delay: 0.25 }}
       className="mb-8"
     >
-      <div 
-        className="rounded-2xl p-5 shadow-md border border-green-200/40 relative overflow-hidden"
-        style={{ background: 'linear-gradient(to bottom right, #E3FCEB, #F9FFFB)' }}
-      >
-        {/* Green radial glow behind title icon */}
-        <div 
-          className="absolute top-3 left-3 w-8 h-8 rounded-full opacity-30 blur-md"
-          style={{ background: 'radial-gradient(circle, #4DC277, transparent)' }}
-        />
+      <div className="rounded-xl p-5 shadow-sm border bg-gradient-to-br from-purple-50/30 to-pink-50/20 dark:from-gray-800 dark:to-gray-700 border-gray-200 dark:border-gray-600">
         {/* Section Title */}
-        <div className="flex items-center gap-2 mb-5 relative z-10">
-          <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-lg shadow-sm">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-lg">
             ✨
           </div>
-          <h3 className="text-base font-bold text-gray-900">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
             Your Daily Wellness Briefing
           </h3>
         </div>
@@ -162,22 +154,21 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="bg-white/70 rounded-xl p-3 border-l-3 border-green-400/60"
-              style={{ borderLeftWidth: '3px' }}
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                What Improved Today
-              </h4>
-              <div className="space-y-1.5">
-                {improvements.map((improvement, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-2 text-sm text-gray-800"
-                  >
-                    <span className="text-green-600 font-bold mt-0.5">↑</span>
-                    <span className="flex-1">{improvement}</span>
+              <div className="rounded-xl p-3 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    What Improved Today
+                  </p>
+                  <div className="space-y-1.5">
+                    {improvements.map((improvement, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <span className="text-sm font-bold text-green-600 dark:text-green-400">↑</span>
+                        <p className="text-sm flex-1 text-gray-700 dark:text-gray-300">{improvement}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </motion.div>
           )}
@@ -188,22 +179,21 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.15 }}
-              className="bg-white/70 rounded-xl p-3 border-l-3 border-orange-400/60"
-              style={{ borderLeftWidth: '3px' }}
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                What Declined
-              </h4>
-              <div className="space-y-1.5">
-                {declines.map((decline, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-2 text-sm text-gray-800"
-                  >
-                    <span className="text-orange-600 font-bold mt-0.5">↓</span>
-                    <span className="flex-1">{decline}</span>
+              <div className="rounded-xl p-3 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    What Declined
+                  </p>
+                  <div className="space-y-1.5">
+                    {declines.map((decline, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <span className="text-sm font-bold text-red-600 dark:text-red-400">↓</span>
+                        <p className="text-sm flex-1 text-gray-700 dark:text-gray-300">{decline}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </motion.div>
           )}
@@ -214,15 +204,17 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="bg-white/80 rounded-xl p-3 border-l-3 border-green-500/60"
-              style={{ borderLeftWidth: '3px' }}
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                Today's Key Insight
-              </h4>
-              <p className="text-sm text-gray-800 font-medium leading-relaxed">
-                {keyInsights[0]}
-              </p>
+              <div className="rounded-xl p-3 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    Today's Key Insight
+                  </p>
+                  <p className="text-sm font-medium leading-relaxed text-gray-700 dark:text-gray-300">
+                    {keyInsights[0]}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -232,15 +224,17 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.25 }}
-              className="bg-white/70 rounded-xl p-3 border-l-3 border-blue-400/60"
-              style={{ borderLeftWidth: '3px' }}
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                Tomorrow's Prediction
-              </h4>
-              <p className="text-sm text-gray-800 leading-relaxed">
-                {predictions[0]}
-              </p>
+              <div className="rounded-xl p-3 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    Tomorrow's Prediction
+                  </p>
+                  <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    {predictions[0]}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -250,15 +244,17 @@ export default function DailyBriefing({ insights, metrics }: DailyBriefingProps)
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
-              className="bg-white/70 rounded-xl p-3 border-l-3 border-purple-400/60"
-              style={{ borderLeftWidth: '3px' }}
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                Food-Specific Insight
-              </h4>
-              <p className="text-sm text-gray-800 leading-relaxed">
-                {foodInsights[0]}
-              </p>
+              <div className="rounded-xl p-3 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    Food-Specific Insight
+                  </p>
+                  <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    {foodInsights[0]}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           )}
         </div>

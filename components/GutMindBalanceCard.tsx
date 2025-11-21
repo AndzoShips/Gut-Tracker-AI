@@ -6,16 +6,12 @@ interface GutMindBalanceCardProps {
   score: number;
 }
 
+const BRAND_COLOR = "#3AB368";
+const TRACK_COLOR = "#E5E7EB";
+
 export default function GutMindBalanceCard({ score }: GutMindBalanceCardProps) {
   const circumference = 2 * Math.PI * 50; // radius = 50
   const offset = circumference - (score / 100) * circumference;
-
-  // Determine color based on score
-  const getColor = () => {
-    if (score >= 70) return "#3AB368"; // richer green
-    if (score >= 50) return "#F5A623"; // warm orange
-    return "#E57373"; // softer red
-  };
 
   const getLabel = () => {
     if (score >= 70) return "Good";
@@ -23,8 +19,9 @@ export default function GutMindBalanceCard({ score }: GutMindBalanceCardProps) {
     return "Poor";
   };
 
-  const color = getColor();
   const label = getLabel();
+  const labelColor =
+    label === "Good" ? BRAND_COLOR : label === "Fair" ? "#F5A623" : "#E57373";
 
   return (
     <motion.div
@@ -47,7 +44,7 @@ export default function GutMindBalanceCard({ score }: GutMindBalanceCardProps) {
               cx="70"
               cy="70"
               r="50"
-              stroke="#e5e7eb"
+              stroke={TRACK_COLOR}
               strokeWidth="10"
               fill="none"
             />
@@ -78,7 +75,7 @@ export default function GutMindBalanceCard({ score }: GutMindBalanceCardProps) {
               cx="70"
               cy="70"
               r="50"
-              stroke={color}
+              stroke={BRAND_COLOR}
               strokeWidth="10"
               fill="none"
               strokeLinecap="round"
@@ -87,15 +84,15 @@ export default function GutMindBalanceCard({ score }: GutMindBalanceCardProps) {
               animate={{ strokeDashoffset: offset }}
               transition={{ duration: 1, ease: "easeOut" }}
               filter={score >= 70 ? "url(#glow)" : undefined}
-              style={score >= 70 ? { filter: `drop-shadow(0 0 4px ${color}80)` } : {}}
+              style={score >= 70 ? { filter: `drop-shadow(0 0 4px ${BRAND_COLOR}80)` } : {}}
             />
           </svg>
           {/* Score in center */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-4xl font-bold" style={{ color }}>
+            <div className="text-4xl font-bold" style={{ color: BRAND_COLOR }}>
               {score}/100
             </div>
-            <div className="text-sm font-semibold mt-1" style={{ color }}>
+            <div className="text-sm font-semibold mt-1" style={{ color: labelColor }}>
               {label}
             </div>
           </div>

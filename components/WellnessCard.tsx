@@ -6,6 +6,9 @@ interface WellnessCardProps {
   score: number;
 }
 
+const BRAND_COLOR = "#3AB368";
+const TRACK_COLOR = "#E5E7EB";
+
 export default function WellnessCard({ score }: WellnessCardProps) {
   const circumference = 2 * Math.PI * 40; // radius = 40
   const offset = circumference - (score / 100) * circumference;
@@ -27,7 +30,7 @@ export default function WellnessCard({ score }: WellnessCardProps) {
               cx="48"
               cy="48"
               r="40"
-              stroke="#e5e7eb"
+              stroke={TRACK_COLOR}
               strokeWidth="8"
               fill="none"
             />
@@ -36,7 +39,7 @@ export default function WellnessCard({ score }: WellnessCardProps) {
               cx="48"
               cy="48"
               r="40"
-              stroke="#4dc277"
+              stroke={BRAND_COLOR}
               strokeWidth="8"
               fill="none"
               strokeLinecap="round"

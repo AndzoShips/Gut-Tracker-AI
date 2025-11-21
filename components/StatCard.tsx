@@ -35,54 +35,78 @@ export default function StatCard({ title, value, icon, index = 0 }: StatCardProp
     return () => clearInterval(timer);
   }, [value]);
 
-  // Determine color based on value
-  const getColor = () => {
+  const getLabel = () => {
+    if (value >= 70) return "Good";
+    if (value >= 50) return "Fair";
+    return "Poor";
+  };
+
+  const getStatusColor = () => {
     if (value >= 70) return "#3AB368"; // green
     if (value >= 50) return "#F5A623"; // orange
     return "#E57373"; // red
   };
 
-  const getGradient = () => {
-    if (value >= 70) {
-      return "linear-gradient(to bottom right, #D1FAE5, #A7F3D0)";
-    } else if (value >= 50) {
-      return "linear-gradient(to bottom right, #FEF3C7, #FDE68A)";
-    }
-    return "linear-gradient(to bottom right, #FEE2E2, #FECACA)";
-  };
+  const statusColor = getStatusColor();
+  const label = getLabel();
+  const trackColorLight = "rgba(148, 163, 184, 0.3)";
+  const trackColorDark = "rgba(15, 23, 42, 0.5)";
 
-  const color = getColor();
-  const gradient = getGradient();
+  const circumference = 2 * Math.PI * 40; // radius = 40
+  const offset = circumference - (displayValue / 100) * circumference;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="rounded-xl p-4 border border-gray-200/50 shadow-sm"
-      style={{
-        background: gradient,
-      }}
     >
-      <div className="flex items-center gap-3 mb-3">
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-          style={{ backgroundColor: `${color}20` }}
-        >
-          <div style={{ color }}>{icon}</div>
+      <div className="rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 flex flex-col items-center">
+        <div className="relative w-24 h-24 mb-3">
+          <svg className="transform -rotate-90 w-24 h-24">
+            <circle
+              cx="48"
+              cy="48"
+              r="40"
+              stroke="currentColor"
+              strokeWidth="8"
+              fill="none"
+              className="text-gray-200 dark:text-gray-700"
+              style={{
+                color: trackColorLight,
+              }}
+            />
+            <circle
+              cx="48"
+              cy="48"
+              r="40"
+              stroke={statusColor}
+              strokeWidth="8"
+              fill="none"
+              strokeDasharray={circumference}
+              strokeDashoffset={offset}
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div
+              className="text-2xl mb-1"
+              style={{ color: statusColor }}
+            >
+              {icon}
+            </div>
+            <span
+              className="text-lg font-bold"
+              style={{ color: statusColor }}
+            >
+              {displayValue}%
+            </span>
+          </div>
         </div>
-        <p className="text-xs font-medium text-gray-700 flex-1">{title}</p>
-      </div>
-      <div className="text-center">
-        <motion.p
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
-          className="text-2xl font-bold"
-          style={{ color }}
-        >
-          {displayValue}%
-        </motion.p>
+        <div className="text-center">
+          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">{label}</p>
+        </div>
       </div>
     </motion.div>
   );

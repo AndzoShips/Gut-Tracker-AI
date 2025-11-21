@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button, IconButton } from "@whop/frosted-ui";
 
 interface GoalScreenProps {
   selectedGoal?: string;
@@ -52,78 +53,72 @@ export default function GoalScreen({ selectedGoal, onNext, onBack }: GoalScreenP
     <div className="w-full animate-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <button
+        <IconButton
           onClick={onBack}
-          className="mb-6 text-gray-600 hover:text-gray-900 transition-colors"
+          className="mb-6"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </IconButton>
         
         {/* Progress Indicator */}
         <div className="flex gap-2 mb-6">
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-8 h-2 rounded-full bg-secondary"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-8 h-2 rounded-full bg-green-500 dark:bg-green-400"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-4xl font-bold mb-2 text-gray-900 dark:text-gray-100">
           What do you want to improve the most?
-        </h1>
+        </h2>
       </div>
 
       {/* Options */}
       <div className="space-y-3 mb-8">
         {goals.map((goal) => (
-          <button
+          <Button
             key={goal.id}
             onClick={() => handleSelect(goal.id)}
-            className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 ${
-              selected === goal.id
-                ? "border-secondary bg-green-50 shadow-md"
-                : "border-gray-200 bg-white hover:border-gray-300"
-            }`}
+            variant={selected === goal.id ? "solid" : "soft"}
+            className="w-full text-left p-4"
           >
             <div className="flex items-center gap-4">
-              <div className="text-4xl">{goal.emoji}</div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">{goal.title}</h3>
-                <p className="text-sm text-gray-600">{goal.description}</p>
+              <span className="text-3xl">{goal.emoji}</span>
+              <div className="flex flex-col flex-1">
+                <p className="font-semibold mb-1">{goal.title}</p>
+                <p className="text-sm">{goal.description}</p>
               </div>
               <div
                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                   selected === goal.id
-                    ? "border-secondary bg-secondary"
-                    : "border-gray-300"
+                    ? "border-current bg-current"
+                    : "border-current opacity-30"
                 }`}
               >
                 {selected === goal.id && (
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 )}
               </div>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
 
       {/* Button */}
-      <button
+      <Button
         onClick={handleNext}
         disabled={!selected}
-        className={`w-full py-4 px-8 rounded-2xl font-semibold transition-all duration-300 ${
-          selected
-            ? "bg-secondary hover:bg-green-600 text-white shadow-lg transform hover:scale-105 active:scale-95"
-            : "bg-gray-200 text-gray-400 cursor-not-allowed"
-        }`}
+        variant="solid"
+        size="4"
+        className="w-full"
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 }
-

@@ -31,6 +31,12 @@ export async function POST(req: Request) {
   "mental_clarity_score": 0-100,
   "energy_score": 0-100,
   "digestion_score": 0-100,
+  "wellness_insights": {
+    "mood_insight": "A specific, ingredient-based explanation of how this meal affects mood. MUST reference actual ingredients from detected_ingredients. Explain the mechanism (e.g., 'The salmon in your meal provides omega-3 fatty acids that support serotonin production, which can improve mood stability throughout the day.')",
+    "mental_clarity_insight": "A specific, ingredient-based explanation of how this meal affects mental clarity. MUST reference actual ingredients from detected_ingredients. Explain the mechanism (e.g., 'The complex carbohydrates in quinoa provide steady glucose to your brain, supporting sustained focus without energy crashes.')",
+    "energy_insight": "A specific, ingredient-based explanation of how this meal affects energy levels. MUST reference actual ingredients from detected_ingredients. Explain the mechanism (e.g., 'The lean protein from chicken helps maintain steady blood sugar levels, preventing energy spikes and crashes.')",
+    "digestion_insight": "A specific, ingredient-based explanation of how this meal affects digestion. MUST reference actual ingredients from detected_ingredients. Explain the mechanism (e.g., 'The fiber from broccoli and quinoa supports healthy digestion by promoting regular bowel movements and feeding beneficial gut bacteria.')"
+  },
   "gut_insights": {
     "digestive_ease": "Assessment of how easy/hard this meal is to digest (e.g., 'hard to digest due to heavy oils' or 'easy to digest with gentle ingredients')",
     "fiber_content": "Evaluation of fiber adequacy (e.g., 'good fiber from whole grains' or 'lacking fiber, low in plant matter')",
@@ -69,7 +75,14 @@ CRITICAL RULES:
 2. For detected_ingredients: You MUST carefully examine the image and list 4-8 actual ingredients you can see. Do not make up ingredients. Use simple, clear ingredient names.
 3. Be specific and concrete in all insights.
 4. All scores must be numbers between 0-100.
-5. For personalized_insights: Generate 3 short insights (≤2 sentences each) that are SPECIFIC (mention actual ingredients/nutrients), INTERESTING (cause-and-effect), PERSONAL (second-person "you"), and SHORT. Include one "Gut" insight, one "Mind" insight, and one "Balance" insight connecting the two.`;
+5. For wellness_insights: Each insight MUST:
+   - Reference specific ingredients from detected_ingredients array
+   - Explain HOW and WHY the ingredients affect that specific category (mood, mental clarity, energy, or digestion)
+   - Be 1-2 sentences, clear and actionable
+   - Use second-person ("you", "your meal")
+   - Connect ingredients to biological mechanisms (e.g., "omega-3s support serotonin", "fiber feeds gut bacteria", "complex carbs provide steady glucose")
+   - If a score is low, explain what's missing or what negative impact ingredients have
+6. For personalized_insights: Generate 3 short insights (≤2 sentences each) that are SPECIFIC (mention actual ingredients/nutrients), INTERESTING (cause-and-effect), PERSONAL (second-person "you"), and SHORT. Include one "Gut" insight, one "Mind" insight, and one "Balance" insight connecting the two.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -82,17 +95,29 @@ CRITICAL RULES:
               type: "text", 
               text: `Analyze this meal image carefully. First, identify all visible ingredients in the meal. Then provide the complete JSON analysis with all required fields including detected_ingredients as an array of ingredient names.
 
+CRITICAL: For wellness_insights, generate category-specific insights that:
+1. Reference ACTUAL ingredients from detected_ingredients (e.g., "The salmon", "quinoa", "broccoli", "olive oil")
+2. Explain HOW those ingredients affect the specific category:
+   - mood_insight: How ingredients affect mood/serotonin (e.g., omega-3s, tryptophan, B vitamins, magnesium)
+   - mental_clarity_insight: How ingredients affect brain function (e.g., complex carbs, healthy fats, antioxidants, B vitamins)
+   - energy_insight: How ingredients affect energy levels (e.g., protein, complex carbs, iron, B vitamins)
+   - digestion_insight: How ingredients affect digestion (e.g., fiber, probiotics, hydration, anti-inflammatory compounds)
+3. Be specific about mechanisms (e.g., "omega-3s support serotonin production", "fiber feeds beneficial gut bacteria")
+4. Use second-person ("you", "your meal")
+5. Be 1-2 sentences each
+
+Example wellness_insights:
+- mood_insight: "The salmon in your meal provides omega-3 fatty acids that support serotonin production in your brain, which can improve mood stability throughout the day."
+- mental_clarity_insight: "The complex carbohydrates in quinoa provide steady glucose to your brain, supporting sustained focus without the energy crashes that come from simple sugars."
+- energy_insight: "The lean protein from chicken helps maintain steady blood sugar levels, preventing energy spikes and crashes that can leave you feeling tired later."
+- digestion_insight: "The fiber from broccoli and quinoa supports healthy digestion by promoting regular bowel movements and feeding beneficial gut bacteria in your microbiome."
+
 For the personalized_insights field, generate 3 short insights (≤2 sentences each) that are:
 - SPECIFIC: Mention actual ingredients or nutrients (e.g., "avocado", "magnesium", "fiber")
 - INTERESTING: Give cause-and-effect statements explaining why it matters
 - PERSONAL: Phrase in second-person ("you")
 - SHORT: Each insight ≤ 2 sentences
-- Include one "Gut" insight (digestion/inflammation), one "Mind" insight (focus/mood), and one "Balance" insight (connection between gut and mind)
-
-Example insights:
-1. "The probiotics in your kimchi may help rebalance your gut flora, supporting smoother digestion after meals."
-2. "The healthy fats in your salmon provide omega-3s that may boost mental clarity today."
-3. "Because your meal had low fiber, your blood sugar could spike later — which might make your mood dip by afternoon."`
+- Include one "Gut" insight (digestion/inflammation), one "Mind" insight (focus/mood), and one "Balance" insight (connection between gut and mind)`
             },
             { type: "image_url", image_url: { url: image } },
           ],
@@ -122,6 +147,12 @@ Example insights:
         { error: "The AI response is missing required fields." },
         { status: 502 }
       );
+    }
+
+    // Validate wellness_insights structure if present
+    if (data.wellness_insights && typeof data.wellness_insights !== 'object') {
+      console.warn("wellness_insights is not an object, resetting to empty object");
+      data.wellness_insights = {};
     }
     
     // Validate detected_ingredients exists

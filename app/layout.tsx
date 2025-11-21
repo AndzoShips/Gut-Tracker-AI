@@ -2,6 +2,7 @@ import { WhopApp } from "@whop/react/components";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import FrostedUIProviders from "@/components/FrostedUIProviders";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -26,9 +27,13 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary text-gray-800`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<WhopApp>{children}</WhopApp>
+			<WhopApp>
+				<FrostedUIProviders>
+					{children}
+				</FrostedUIProviders>
+			</WhopApp>
 			</body>
 		</html>
 	);

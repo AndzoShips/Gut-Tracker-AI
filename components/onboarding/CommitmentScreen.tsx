@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button, IconButton } from "@whop/frosted-ui";
 
 interface CommitmentScreenProps {
   selectedCommitment?: string;
@@ -42,45 +43,32 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
     }
   };
 
-  const getCommitmentLabel = (id: string) => {
-    switch (id) {
-      case "learn":
-        return "Just curious";
-      case "small_changes":
-        return "Ready to learn";
-      case "all_in":
-        return "Committed to change";
-      default:
-        return "";
-    }
-  };
-
   return (
     <div className="w-full animate-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <button
+        <IconButton
           onClick={onBack}
-          className="mb-6 text-gray-600 hover:text-gray-900 transition-colors"
+          className="mb-6"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </IconButton>
         
         {/* Progress Indicator */}
         <div className="flex gap-2 mb-6">
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div className="w-8 h-2 rounded-full bg-secondary"></div>
-          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
+          <div className="w-8 h-2 rounded-full bg-green-500 dark:bg-green-400"></div>
+          <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-4xl font-bold mb-2 text-gray-900 dark:text-gray-100">
           How committed are you?
-        </h1>
-        <p className="text-gray-600 mt-2">
+        </h2>
+        <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
           Your dedication helps us provide the most accurate and supportive guidance.
         </p>
       </div>
@@ -88,50 +76,44 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
       {/* Options */}
       <div className="space-y-3 mb-8">
         {commitments.map((commitment) => (
-          <button
+          <Button
             key={commitment.id}
             onClick={() => handleSelect(commitment.id)}
-            className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 ${
-              selected === commitment.id
-                ? "border-secondary bg-green-50 shadow-md"
-                : "border-gray-200 bg-white hover:border-gray-300"
-            }`}
+            variant={selected === commitment.id ? "solid" : "soft"}
+            className="w-full text-left p-4"
           >
             <div className="flex items-center gap-4">
-              <div className="text-3xl">{commitment.emoji}</div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">{commitment.title}</h3>
-                <p className="text-sm text-gray-600">{commitment.description}</p>
+              <span className="text-4xl">{commitment.emoji}</span>
+              <div className="flex flex-col flex-1">
+                <p className="font-semibold mb-1">{commitment.title}</p>
+                <p className="text-sm">{commitment.description}</p>
               </div>
               <div
                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                   selected === commitment.id
-                    ? "border-secondary bg-secondary"
-                    : "border-gray-300"
+                    ? "border-current bg-current"
+                    : "border-current opacity-30"
                 }`}
               >
                 {selected === commitment.id && (
-                  <div className="w-2 h-2 rounded-full bg-white"></div>
+                  <div className="w-2 h-2 rounded-full bg-current"></div>
                 )}
               </div>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
 
       {/* Button */}
-      <button
+      <Button
         onClick={handleNext}
         disabled={!selected}
-        className={`w-full py-4 px-8 rounded-2xl font-semibold transition-all duration-300 ${
-          selected
-            ? "bg-secondary hover:bg-green-600 text-white shadow-lg transform hover:scale-105 active:scale-95"
-            : "bg-gray-200 text-gray-400 cursor-not-allowed"
-        }`}
+        variant="solid"
+        size="4"
+        className="w-full"
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 }
-

@@ -16,6 +16,8 @@ const goalLabels: Record<string, string> = {
   balanced_lifestyle: "Balanced Lifestyle",
 };
 
+const BRAND_GRADIENT = "linear-gradient(90deg, #3AB368, #2E9153)";
+
 export default function GoalTracker({ userGoal, progress, target, onAddMeal }: GoalTrackerProps) {
   const goalLabel = userGoal ? goalLabels[userGoal] || userGoal : "Improve Wellness";
 
@@ -34,10 +36,11 @@ export default function GoalTracker({ userGoal, progress, target, onAddMeal }: G
           <div className="flex-1">
             <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-secondary rounded-full"
+                className="h-full rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
+                style={{ background: BRAND_GRADIENT }}
               />
             </div>
           </div>

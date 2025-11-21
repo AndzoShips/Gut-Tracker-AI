@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@whop/frosted-ui";
 import HomeHeader from "@/components/HomeHeader";
 import TodayFocusCard from "@/components/TodayFocusCard";
 import WellnessProgressCard from "@/components/WellnessProgressCard";
@@ -12,6 +13,8 @@ import MealsList from "@/components/MealsList";
 import StreakTracker from "@/components/StreakTracker";
 import MealScanModal from "@/components/MealScanModal";
 import MealAnalysisModal from "@/components/MealAnalysisModal";
+import DarkModeToggle from "@/components/DarkModeToggle";
+import GutMindBalanceInfoModal from "@/components/GutMindBalanceInfoModal";
 
 interface Meal {
   id: string;
@@ -40,6 +43,8 @@ export default function DashboardPage() {
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [insights, setInsights] = useState<any[]>([]);
   const [loadingInsights, setLoadingInsights] = useState(false);
+  const [showGutMindInfoModal, setShowGutMindInfoModal] = useState(false);
+  const [isFirstTimeGutMindInfo, setIsFirstTimeGutMindInfo] = useState(false);
 
   // Check onboarding
   useEffect(() => {
@@ -57,6 +62,16 @@ export default function DashboardPage() {
       } catch (e) {
         console.error("Error loading onboarding data:", e);
       }
+    }
+
+    // Check if user has seen the Gut-Mind Balance Index explanation
+    const hasSeenInfo = localStorage.getItem("gut_mind_balance_info_seen");
+    if (!hasSeenInfo) {
+      // Show the info modal after a short delay to let the page load
+      setTimeout(() => {
+        setShowGutMindInfoModal(true);
+        setIsFirstTimeGutMindInfo(true);
+      }, 1000);
     }
   }, [router]);
 
@@ -214,7 +229,6 @@ export default function DashboardPage() {
         {
           icon: "💡",
           message: "Keep tracking your meals to see personalized insights!",
-          impactColor: "bg-blue-50",
         },
       ]);
       return;
@@ -249,7 +263,6 @@ export default function DashboardPage() {
         {
           icon: "💡",
           message: "Keep tracking your meals to see personalized insights!",
-          impactColor: "bg-blue-50",
         },
       ]);
     } finally {
@@ -283,6 +296,14 @@ export default function DashboardPage() {
   }, [metrics.overallScore, meals.length, selectedDate]);
 
   const handleImageSelected = async (image: string) => {
+    console.log("handleImageSelected called, image length:", image?.length);
+    
+    if (!image) {
+      console.error("No image provided to handleImageSelected");
+      alert("Failed to load image. Please try again.");
+      return;
+    }
+
     setSelectedImage(image);
     setShowScanModal(false);
     // Show analyzing state in dashboard
@@ -293,6 +314,7 @@ export default function DashboardPage() {
 
     // Start analysis in background
     try {
+      console.log("Sending image to /api/analyze...");
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: {
@@ -301,7 +323,10 @@ export default function DashboardPage() {
         body: JSON.stringify({ image }),
       });
 
+      console.log("Response status:", response.status);
       const data = await response.json();
+      console.log("Response data:", data);
+      
       if (response.ok) {
         setAnalysisResult(data);
         setAnalyzingMeal(null); // Clear analyzing state
@@ -314,6 +339,7 @@ export default function DashboardPage() {
           fetchInsights();
         }, 500);
       } else {
+        console.error("API error:", data);
         setAnalyzingMeal(null); // Clear analyzing state
         setShowAnalysisModal(true); // Show modal with error
         setAnalysisResult({ error: data.error || "Something went wrong" });
@@ -337,7 +363,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(to bottom, #E9F8EE, #FFFFFF)' }}>
+      <div className="min-h-screen pb-24 bg-gradient-to-br from-green-50/20 via-white to-purple-50/10 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDate.toDateString()}
@@ -365,11 +391,6 @@ export default function DashboardPage() {
                 }
               />
 
-              <TodayFocusCard
-                icon="🌿"
-                title="Today's Gut Priority: Reduce Inflammation"
-                description="Your meals yesterday were low in fiber. Add one plant-based meal today to boost digestion."
-              />
 
               {/* Metrics Grid */}
               <motion.div
@@ -377,7 +398,7 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <h3 className="text-xs font-medium text-gray-500 mb-3 uppercase tracking-wide">
+                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wide">
                   Your Daily Metrics
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
@@ -516,33 +537,24 @@ export default function DashboardPage() {
           </motion.div>
 
           {/* Floating Add Button */}
-          <motion.button
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-            onClick={() => setShowScanModal(true)}
-            className="fixed bottom-6 right-6 w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 z-50"
-            style={{ 
-              backgroundColor: '#4DC277',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#43B26A';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#4DC277';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.backgroundColor = '#37985A';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.backgroundColor = '#43B26A';
-            }}
-            aria-label="Add meal"
+            className="fixed bottom-6 right-6 z-50"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </motion.button>
+            <Button
+              onClick={() => setShowScanModal(true)}
+              variant="solid"
+              size="4"
+              className="w-14 h-14 rounded-full"
+              aria-label="Add meal"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </Button>
+          </motion.div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -569,6 +581,19 @@ export default function DashboardPage() {
           onAnalysisComplete={handleAnalysisComplete}
         />
       )}
+
+      {/* Gut-Mind Balance Index Info Modal */}
+      <GutMindBalanceInfoModal
+        isOpen={showGutMindInfoModal}
+        onClose={() => {
+          setShowGutMindInfoModal(false);
+          setIsFirstTimeGutMindInfo(false);
+        }}
+        isFirstTime={isFirstTimeGutMindInfo}
+      />
+
+      {/* Dark Mode Toggle - for testing */}
+      <DarkModeToggle />
     </>
   );
 }

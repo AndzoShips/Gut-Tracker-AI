@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       mental_score,
       overall_score,
       short_verdict,
+      wellness_insights,
       gut_insights,
       mental_insights,
       reasons,
@@ -91,6 +92,11 @@ export async function POST(req: Request) {
       reasons: reasons || [],
       alternatives: alternatives || [],
     };
+
+    // Only include wellness_insights if it exists (column might not be in DB yet)
+    if (wellness_insights !== null && wellness_insights !== undefined) {
+      mealDataToInsert.wellness_insights = wellness_insights;
+    }
 
     // Only include personalized_insights if it exists (column might not be in DB yet)
     if (personalized_insights !== null && personalized_insights !== undefined) {

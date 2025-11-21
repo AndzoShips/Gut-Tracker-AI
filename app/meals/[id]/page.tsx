@@ -35,6 +35,15 @@ interface MealDetails {
 export default function MealDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const getScoreMeta = (score?: number) => {
+    const value = score ?? 0;
+    if (value >= 70) return { label: "Good", color: "#3AB368" };
+    if (value >= 50) return { label: "Fair", color: "#F5A623" };
+    return { label: "Poor", color: "#E57373" };
+  };
+
+  const circleTrackColor = "rgba(148, 163, 184, 0.35)";
+
   const [meal, setMeal] = useState<MealDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -125,7 +134,7 @@ export default function MealDetailPage() {
       <div className="p-4 space-y-6">
         {/* Meal Title */}
         {meal.title && (
-          <div className="bg-gradient-to-r from-gray-a2 to-gray-a3 rounded-2xl p-6 border border-gray-a4">
+          <div className="bg-gradient-to-r from-gray-a2 to-gray-a3 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-2xl">🍽️</span>
@@ -150,108 +159,108 @@ export default function MealDetailPage() {
             <h3 className="text-6 font-bold text-gray-12 mb-4">Wellness Impact Scores</h3>
             <div className="grid grid-cols-2 gap-4">
               {meal.mood_score !== undefined && (
-                <div className="bg-white rounded-2xl p-4 border border-gray-a4 flex flex-col items-center">
+                <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600 flex flex-col items-center">
                   <div className="relative w-24 h-24 mb-2">
                     <svg className="transform -rotate-90 w-24 h-24">
-                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" />
+                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" style={{ color: circleTrackColor }} />
                       <circle
                         cx="48" cy="48" r="40"
-                        stroke="currentColor" strokeWidth="8" fill="none"
+                        stroke={getScoreMeta(meal.mood_score).color} strokeWidth="8" fill="none"
                         strokeDasharray={`${2 * Math.PI * 40}`}
                         strokeDashoffset={`${2 * Math.PI * 40 * (1 - (meal.mood_score || 0) / 100)}`}
-                        className="text-orange-500" strokeLinecap="round"
+                        strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl text-orange-500 mb-1">😊</span>
+                      <span className="text-3xl mb-1" style={{ color: getScoreMeta(meal.mood_score).color }}>😊</span>
                       <span className="text-3 font-bold text-gray-12">{meal.mood_score}%</span>
                     </div>
                   </div>
                   <div className="text-center">
                     <p className="text-3 font-semibold text-gray-12">Mood</p>
                     <p className="text-2 text-gray-10">
-                      {meal.mood_score >= 80 ? 'Excellent' : meal.mood_score >= 60 ? 'Good' : 'Fair'}
+                      {getScoreMeta(meal.mood_score).label}
                     </p>
                   </div>
                 </div>
               )}
 
               {meal.mental_clarity_score !== undefined && (
-                <div className="bg-white rounded-2xl p-4 border border-gray-a4 flex flex-col items-center">
+                <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600 flex flex-col items-center">
                   <div className="relative w-24 h-24 mb-2">
                     <svg className="transform -rotate-90 w-24 h-24">
-                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" />
+                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" style={{ color: circleTrackColor }} />
                       <circle
                         cx="48" cy="48" r="40"
-                        stroke="currentColor" strokeWidth="8" fill="none"
+                        stroke={getScoreMeta(meal.mental_clarity_score).color} strokeWidth="8" fill="none"
                         strokeDasharray={`${2 * Math.PI * 40}`}
                         strokeDashoffset={`${2 * Math.PI * 40 * (1 - (meal.mental_clarity_score || 0) / 100)}`}
-                        className="text-teal-500" strokeLinecap="round"
+                        strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl text-teal-500 mb-1">🧠</span>
+                      <span className="text-3xl mb-1" style={{ color: getScoreMeta(meal.mental_clarity_score).color }}>🧠</span>
                       <span className="text-3 font-bold text-gray-12">{meal.mental_clarity_score}%</span>
                     </div>
                   </div>
                   <div className="text-center">
                     <p className="text-3 font-semibold text-gray-12">Mental Clarity</p>
                     <p className="text-2 text-gray-10">
-                      {meal.mental_clarity_score >= 80 ? 'Excellent' : meal.mental_clarity_score >= 60 ? 'Good' : 'Fair'}
+                      {getScoreMeta(meal.mental_clarity_score).label}
                     </p>
                   </div>
                 </div>
               )}
 
               {meal.energy_score !== undefined && (
-                <div className="bg-white rounded-2xl p-4 border border-gray-a4 flex flex-col items-center">
+                <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600 flex flex-col items-center">
                   <div className="relative w-24 h-24 mb-2">
                     <svg className="transform -rotate-90 w-24 h-24">
-                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" />
+                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" style={{ color: circleTrackColor }} />
                       <circle
                         cx="48" cy="48" r="40"
-                        stroke="currentColor" strokeWidth="8" fill="none"
+                        stroke={getScoreMeta(meal.energy_score).color} strokeWidth="8" fill="none"
                         strokeDasharray={`${2 * Math.PI * 40}`}
                         strokeDashoffset={`${2 * Math.PI * 40 * (1 - (meal.energy_score || 0) / 100)}`}
-                        className="text-yellow-500" strokeLinecap="round"
+                        strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl text-yellow-500 mb-1">⚡</span>
+                      <span className="text-3xl mb-1" style={{ color: getScoreMeta(meal.energy_score).color }}>⚡</span>
                       <span className="text-3 font-bold text-gray-12">{meal.energy_score}%</span>
                     </div>
                   </div>
                   <div className="text-center">
                     <p className="text-3 font-semibold text-gray-12">Energy</p>
                     <p className="text-2 text-gray-10">
-                      {meal.energy_score >= 80 ? 'Excellent' : meal.energy_score >= 60 ? 'Good' : 'Fair'}
+                      {getScoreMeta(meal.energy_score).label}
                     </p>
                   </div>
                 </div>
               )}
 
               {meal.digestion_score !== undefined && (
-                <div className="bg-white rounded-2xl p-4 border border-gray-a4 flex flex-col items-center">
+                <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600 flex flex-col items-center">
                   <div className="relative w-24 h-24 mb-2">
                     <svg className="transform -rotate-90 w-24 h-24">
-                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" />
+                      <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-a3" style={{ color: circleTrackColor }} />
                       <circle
                         cx="48" cy="48" r="40"
-                        stroke="currentColor" strokeWidth="8" fill="none"
+                        stroke={getScoreMeta(meal.digestion_score).color} strokeWidth="8" fill="none"
                         strokeDasharray={`${2 * Math.PI * 40}`}
                         strokeDashoffset={`${2 * Math.PI * 40 * (1 - (meal.digestion_score || 0) / 100)}`}
-                        className="text-secondary" strokeLinecap="round"
+                        strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl text-secondary mb-1">❤️</span>
+                      <span className="text-3xl mb-1" style={{ color: getScoreMeta(meal.digestion_score).color }}>❤️</span>
                       <span className="text-3 font-bold text-gray-12">{meal.digestion_score}%</span>
                     </div>
                   </div>
                   <div className="text-center">
                     <p className="text-3 font-semibold text-gray-12">Digestion</p>
                     <p className="text-2 text-gray-10">
-                      {meal.digestion_score >= 80 ? 'Excellent' : meal.digestion_score >= 60 ? 'Good' : 'Fair'}
+                      {getScoreMeta(meal.digestion_score).label}
                     </p>
                   </div>
                 </div>
@@ -312,7 +321,7 @@ export default function MealDetailPage() {
         {/* Gut and Mental Insights */}
         <div className="space-y-4">
           {meal.gut_insights && (
-            <div className="bg-white rounded-2xl p-4 border border-gray-a4">
+            <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600">
               <button
                 onClick={() => setGutInsightsOpen(!gutInsightsOpen)}
                 className="w-full flex items-center justify-between"
@@ -342,7 +351,7 @@ export default function MealDetailPage() {
           )}
 
           {meal.mental_insights && (
-            <div className="bg-white rounded-2xl p-4 border border-gray-a4">
+            <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600">
               <button
                 onClick={() => setMentalInsightsOpen(!mentalInsightsOpen)}
                 className="w-full flex items-center justify-between"

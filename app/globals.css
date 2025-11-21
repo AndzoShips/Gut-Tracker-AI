@@ -6,6 +6,7 @@
 @import "@whop/react/styles.css" layer(frosted_ui);
 
 /* biome-ignore lint/suspicious/noUnknownAtRules: this rule is imported from whop */
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS config directive */
 @config '../tailwind.config.ts';
 
 /* Onboarding animations */
@@ -20,8 +21,59 @@
   }
 }
 
+@layer components {
+  :root {
+    --brand-progress-color: #3ab368;
+    --brand-progress-track: rgba(58, 179, 104, 0.15);
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 0.4s ease-out;
+}
+
+/* Utility: visually hide scrollbars while keeping scroll functionality */
+.hide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+}
+
+/* Brand progress utilities */
+.brand-progress {
+  background-color: var(--brand-progress-track) !important;
+  position: relative;
+}
+
+.brand-progress .bg-whop-field-highlight {
+  background-color: var(--brand-progress-color) !important;
+}
+
+html.dark .brand-progress {
+  background-color: rgba(58, 179, 104, 0.25) !important;
+}
+
+.brand-ring {
+  color: var(--brand-progress-color) !important;
+}
+
+.brand-ring-track {
+  color: rgba(58, 179, 104, 0.25) !important;
 }
 
 /* Pulse animation for score badges */
@@ -32,4 +84,154 @@
   50% {
     opacity: 0.7;
   }
+}
+
+/* Force modal to be wider and maintain white background */
+/* Target the Dialog.Panel that Frosted-UI Modal creates */
+/* Only apply max-width if modal has !max-w-2xl class */
+div[role="dialog"] > div:last-child > div[class*="max-w-2xl"] {
+  max-width: 42rem !important; /* 672px - max-w-2xl */
+}
+
+/* Smaller modals (like scan modal) should use max-w-md */
+div[role="dialog"] > div:last-child > div[class*="max-w-md"] {
+  max-width: 28rem !important; /* 448px - max-w-md */
+}
+
+/* Override bg-whop-background - white in light mode, dark in dark mode */
+.bg-whop-background {
+  background-color: white !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-whop-background {
+    background-color: rgb(31 41 55) !important; /* Dark gray for dark mode */
+  }
+}
+
+/* Also handle dark mode classes for bg-whop-background */
+html.dark .bg-whop-background,
+html.biz-dark-1 .bg-whop-background,
+html.biz-dark-2 .bg-whop-background {
+  background-color: rgb(31 41 55) !important;
+}
+
+/* Ensure modals have correct z-index (Frosted-UI handles positioning) */
+div[role="dialog"] {
+  z-index: 200 !important;
+}
+
+/* Fix modal backdrop overlay */
+div[role="dialog"] > div:first-child {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Dark mode support - Ensure dark mode works with both .dark and .biz-dark-1/.biz-dark-2 */
+.biz-dark-1,
+.biz-dark-2,
+.dark {
+  color-scheme: dark;
+}
+
+/* Force dark backgrounds when dark mode is active */
+html.dark,
+html.biz-dark-1,
+html.biz-dark-2 {
+  background-color: rgb(17 24 39) !important;
+}
+
+/* Apply dark mode to main dashboard container */
+html.dark .min-h-screen,
+html.biz-dark-1 .min-h-screen,
+html.biz-dark-2 .min-h-screen {
+  background: linear-gradient(to bottom right, rgb(17 24 39), rgb(31 41 55), rgb(17 24 39)) !important;
+}
+
+/* Override any light backgrounds in dark mode */
+html.dark [class*="bg-white"],
+html.biz-dark-1 [class*="bg-white"],
+html.biz-dark-2 [class*="bg-white"] {
+  background-color: rgb(31 41 55) !important;
+}
+
+html.dark [class*="from-green-50"],
+html.biz-dark-1 [class*="from-green-50"],
+html.biz-dark-2 [class*="from-green-50"] {
+  --tw-gradient-from: rgb(17 24 39) !important;
+}
+
+html.dark [class*="via-white"],
+html.biz-dark-1 [class*="via-white"],
+html.biz-dark-2 [class*="via-white"] {
+  --tw-gradient-via: rgb(31 41 55) !important;
+}
+
+html.dark [class*="to-purple-50"],
+html.biz-dark-1 [class*="to-purple-50"],
+html.biz-dark-2 [class*="to-purple-50"] {
+  --tw-gradient-to: rgb(17 24 39) !important;
+}
+
+
+/* Ensure text is visible in dark mode */
+html.dark,
+html.biz-dark-1,
+html.biz-dark-2 {
+  color: rgb(243 244 246);
+}
+
+/* Override any remaining white backgrounds */
+html.dark body,
+html.biz-dark-1 body,
+html.biz-dark-2 body {
+  background-color: rgb(17 24 39) !important;
+  color: rgb(243 244 246) !important;
+}
+
+/* Force modal headers to be dark in dark mode */
+html.dark [role="dialog"] header,
+html.biz-dark-1 [role="dialog"] header,
+html.biz-dark-2 [role="dialog"] header,
+html.dark [role="dialog"] [class*="header"],
+html.biz-dark-1 [role="dialog"] [class*="header"],
+html.biz-dark-2 [role="dialog"] [class*="header"] {
+  background-color: rgb(31 41 55) !important;
+  color: rgb(243 244 246) !important;
+}
+
+/* Force modal backgrounds to be dark and remove white borders */
+html.dark [role="dialog"] > div:last-child,
+html.biz-dark-1 [role="dialog"] > div:last-child,
+html.biz-dark-2 [role="dialog"] > div:last-child {
+  background-color: rgb(31 41 55) !important;
+  border-color: rgb(55 65 81) !important; /* Dark border color */
+}
+
+/* Remove any white borders from modal panels in dark mode */
+html.dark [role="dialog"] > div:last-child > div,
+html.biz-dark-1 [role="dialog"] > div:last-child > div,
+html.biz-dark-2 [role="dialog"] > div:last-child > div {
+  border-color: rgb(55 65 81) !important;
+}
+
+/* Override any white borders on the dialog panel itself */
+html.dark [role="dialog"] [class*="bg-white"],
+html.biz-dark-1 [role="dialog"] [class*="bg-white"],
+html.biz-dark-2 [role="dialog"] [class*="bg-white"] {
+  background-color: rgb(31 41 55) !important;
+  border-color: rgb(55 65 81) !important;
+}
+
+/* Ensure modal content containers respect dark mode */
+html.dark [role="dialog"] .bg-white,
+html.biz-dark-1 [role="dialog"] .bg-white,
+html.biz-dark-2 [role="dialog"] .bg-white {
+  background-color: rgb(31 41 55) !important;
+}
+
+/* Override light gray borders on modal container only (not nested components) */
+html.dark [role="dialog"] > div:last-child[class*="border-gray-200"],
+html.biz-dark-1 [role="dialog"] > div:last-child[class*="border-gray-200"],
+html.biz-dark-2 [role="dialog"] > div:last-child[class*="border-gray-200"] {
+  border-color: rgb(55 65 81) !important;
 }

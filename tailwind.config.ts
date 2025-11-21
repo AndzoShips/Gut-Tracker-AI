@@ -4,14 +4,8 @@ export default {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@whop/frosted-ui/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {
-      colors: {
-        primary: "#ffffff",
-        secondary: "#4dc277",
-      },
-    },
-  },
+  darkMode: 'selector',
   plugins: [frostedThemePlugin()],
 };
