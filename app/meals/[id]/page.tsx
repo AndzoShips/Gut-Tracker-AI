@@ -97,7 +97,7 @@ export default function MealDetailPage() {
         <div className="text-center">
           <h2 className="text-6 font-bold text-gray-12 mb-4">Meal Not Found</h2>
           <p className="text-3 text-gray-10 mb-6">{error || "This meal doesn't exist"}</p>
-          <Button onClick={() => router.push("/meals")} variant="classic" size="4">
+          <Button onClick={() => router.push("/meals")}>
             Back to Meal History
           </Button>
         </div>
@@ -391,16 +391,12 @@ export default function MealDetailPage() {
         <div className="space-y-3 pb-6">
           <Button
             onClick={() => router.push("/dashboard")}
-            variant="classic"
-            size="4"
             className="w-full bg-secondary hover:bg-green-600"
           >
                 Back to Dashboard
           </Button>
           <Button
             onClick={() => router.push("/meals")}
-            variant="ghost"
-            size="4"
             className="w-full border-secondary text-secondary hover:bg-green-50"
           >
             Back to Meal History

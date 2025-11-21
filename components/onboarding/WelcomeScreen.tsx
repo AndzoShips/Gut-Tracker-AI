@@ -34,8 +34,6 @@ export default function WelcomeScreen({ onNext }: WelcomeScreenProps) {
       {/* Button */}
       <Button
         onClick={onNext}
-        variant="solid"
-        size="4"
         className="w-full max-w-xs"
       >
         Let's Begin

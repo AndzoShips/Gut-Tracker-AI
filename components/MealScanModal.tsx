@@ -91,8 +91,6 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
                   <Button
                     onClick={handleCameraClick}
-                    variant="outline"
-                    size="4"
                     className="w-full flex flex-col gap-1 py-6 border-gray-300 dark:border-gray-600"
                   >
                     <div className="flex items-center gap-2 text-gray-900 dark:text-white">
@@ -109,8 +107,6 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
                   <Button
                     onClick={handleUploadClick}
-                    variant="outline"
-                    size="4"
                     className="w-full flex flex-col gap-1 py-6 border-gray-300 dark:border-gray-600"
                   >
                     <div className="flex items-center gap-2 text-gray-900 dark:text-white">

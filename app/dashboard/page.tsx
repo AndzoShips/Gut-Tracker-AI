@@ -545,8 +545,6 @@ export default function DashboardPage() {
           >
             <Button
               onClick={() => setShowScanModal(true)}
-              variant="solid"
-              size="4"
               className="w-14 h-14 rounded-full"
               aria-label="Add meal"
             >

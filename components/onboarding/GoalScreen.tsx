@@ -82,7 +82,6 @@ export default function GoalScreen({ selectedGoal, onNext, onBack }: GoalScreenP
           <Button
             key={goal.id}
             onClick={() => handleSelect(goal.id)}
-            variant={selected === goal.id ? "solid" : "soft"}
             className="w-full text-left p-4"
           >
             <div className="flex items-center gap-4">
@@ -113,8 +112,6 @@ export default function GoalScreen({ selectedGoal, onNext, onBack }: GoalScreenP
       <Button
         onClick={handleNext}
         disabled={!selected}
-        variant="solid"
-        size="4"
         className="w-full"
       >
         Next

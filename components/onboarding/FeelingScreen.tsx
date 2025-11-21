@@ -85,7 +85,6 @@ export default function FeelingScreen({ selectedFeeling, onNext, onBack }: Feeli
           <Button
             key={feeling.id}
             onClick={() => handleSelect(feeling.id)}
-            variant={selected === feeling.id ? "solid" : "soft"}
             className="p-6 flex flex-col items-center text-center"
           >
             <span className="text-5xl mb-3">{feeling.emoji}</span>
@@ -107,16 +106,12 @@ export default function FeelingScreen({ selectedFeeling, onNext, onBack }: Feeli
         <Button
           onClick={handleNext}
           disabled={!selected}
-          variant="solid"
-          size="4"
           className="w-full"
         >
           Next
         </Button>
         <Button
           onClick={() => onNext("")}
-          variant="ghost"
-          size="2"
           className="w-full"
         >
           Skip

@@ -65,8 +65,6 @@ export default function DarkModeToggle() {
   return (
     <Button
       onClick={toggleDarkMode}
-      variant="soft"
-      size="3"
       className="fixed bottom-4 left-4 z-50 shadow-lg"
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >

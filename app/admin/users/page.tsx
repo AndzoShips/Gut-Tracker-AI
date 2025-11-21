@@ -16,7 +16,7 @@ export default async function AdminUsersPage() {
           <h1 className="text-6 font-bold text-gray-12 mb-4">Authentication Required</h1>
           <p className="text-3 text-gray-10 mb-6">Please log in through Whop to view this page.</p>
           <Link href="/">
-            <Button variant="classic" size="4">Go Home</Button>
+            <Button>Go Home</Button>
           </Link>
         </div>
       </div>
@@ -51,12 +51,12 @@ export default async function AdminUsersPage() {
               
               <div className="flex gap-4 justify-center">
                 <Link href="https://whop.com/apps" target="_blank">
-                  <Button variant="classic" size="4" className="bg-secondary">
+                  <Button className="bg-secondary">
                     Open Whop Dashboard
                   </Button>
                 </Link>
                 <Link href="/analyze">
-                  <Button variant="ghost" size="4">
+                  <Button>
                     Go to Meal Analysis
                   </Button>
                 </Link>

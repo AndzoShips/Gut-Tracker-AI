@@ -183,8 +183,6 @@ export default function GutMindBalanceInfoModal({
             <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
               <Button
                 onClick={handleGotIt}
-                variant="solid"
-                size="4"
                 className="w-full flex items-center justify-center gap-2 font-semibold"
               >
                 {isFirstTime ? "Got it, let's get started!" : "Got it"}

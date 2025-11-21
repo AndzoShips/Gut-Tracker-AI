@@ -79,7 +79,6 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
           <Button
             key={commitment.id}
             onClick={() => handleSelect(commitment.id)}
-            variant={selected === commitment.id ? "solid" : "soft"}
             className="w-full text-left p-4"
           >
             <div className="flex items-center gap-4">
@@ -108,8 +107,6 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
       <Button
         onClick={handleNext}
         disabled={!selected}
-        variant="solid"
-        size="4"
         className="w-full"
       >
         Next

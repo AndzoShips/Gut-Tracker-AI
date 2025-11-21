@@ -163,8 +163,6 @@ export default function SummaryScreen({ data, onComplete, onBack }: SummaryScree
       {/* Button */}
       <Button
         onClick={onComplete}
-        variant="solid"
-        size="4"
         className="w-full"
       >
         Start My Journey

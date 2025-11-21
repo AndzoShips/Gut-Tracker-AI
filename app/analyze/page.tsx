@@ -440,8 +440,6 @@ export default function AnalyzePage() {
               {/* Action Buttons */}
               <div className="space-y-3 pb-6">
                 <Button
-                  variant="classic"
-                  size="4"
                   className="w-full bg-secondary hover:bg-green-600"
                   onClick={() => {
                     if (result.id) {
@@ -460,8 +458,6 @@ export default function AnalyzePage() {
                     setImage(null);
                     setError(null);
                   }}
-                  variant="ghost"
-                  size="4"
                   className="w-full border-secondary text-secondary hover:bg-green-50"
                 >
                   Scan Another Meal
@@ -513,8 +509,6 @@ export default function AnalyzePage() {
         <div className="w-full max-w-sm mb-4">
           <Button
             onClick={handleScanButtonClick}
-            variant="classic"
-            size="4"
             className="w-full flex items-center justify-center gap-2"
           >
             Scan Your Meal

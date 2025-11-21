@@ -26,8 +26,6 @@ export default function LoginPage() {
           
               <Link href="/dashboard">
                 <Button
-                  variant="classic"
-                  size="4"
                   className="w-full bg-secondary hover:bg-green-600"
                 >
                   Go to Dashboard

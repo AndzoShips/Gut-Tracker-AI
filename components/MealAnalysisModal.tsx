@@ -355,8 +355,6 @@ export default function MealAnalysisModal({
                     setError(null);
                     analyzeImage();
                   }}
-                  variant="solid"
-                  size="4"
                 >
                   Try Again
                 </Button>
@@ -527,8 +525,6 @@ export default function MealAnalysisModal({
                     {result.id ? (
                       <Button
                         onClick={handleViewDetails}
-                        variant="solid"
-                        size="4"
                         className="w-full justify-center font-semibold"
                       >
                         View Details
@@ -536,8 +532,6 @@ export default function MealAnalysisModal({
                     ) : saved ? (
                       <Button
                         disabled
-                        variant="soft"
-                        size="4"
                         className="w-full justify-center font-semibold"
                       >
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -549,8 +543,6 @@ export default function MealAnalysisModal({
                       <Button
                         onClick={handleSaveMeal}
                         disabled={saving}
-                        variant="solid"
-                        size="4"
                         className="w-full justify-center font-semibold"
                       >
                         {saving ? (
@@ -565,8 +557,6 @@ export default function MealAnalysisModal({
                     )}
                     <Button
                       onClick={handleClose}
-                      variant="soft"
-                      size="4"
                       className="w-full justify-center font-semibold"
                     >
                       {result.id || saved ? "Done" : "Close"}
