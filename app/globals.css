@@ -235,3 +235,48 @@ html.biz-dark-1 [role="dialog"] > div:last-child[class*="border-gray-200"],
 html.biz-dark-2 [role="dialog"] > div:last-child[class*="border-gray-200"] {
   border-color: rgb(55 65 81) !important;
 }
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  /* Ensure touch targets are minimum 44px */
+  button:not([class*="w-"]):not([class*="h-"]),
+  a:not([class*="w-"]):not([class*="h-"]),
+  [role="button"]:not([class*="w-"]):not([class*="h-"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Safe area for iOS */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Touch feedback for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active,
+  [role="button"]:active {
+    opacity: 0.8;
+  }
+  
+  /* Ensure buttons have visual feedback */
+  button:not(:disabled):active {
+    transform: scale(0.98);
+  }
+}
+
+/* Prevent text size adjustment on iOS */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}

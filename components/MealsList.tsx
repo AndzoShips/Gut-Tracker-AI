@@ -127,39 +127,39 @@ export default function MealsList({ meals, isLoading, selectedDate, analyzingMea
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
-              <Link href={`/meals/${meal.id}`}>
-                <div className="rounded-xl p-4 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600 transition-all duration-150 hover:scale-[1.01] active:scale-[0.99] cursor-pointer">
-                  <div className="flex items-center gap-4">
-                    {meal.image_url ? (
-                      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={meal.image_url}
-                          alt={meal.title || "Meal"}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">🍽️</span>
-                      </div>
-                    )}
-                    <div className="flex flex-col flex-1 min-w-0">
-                      <p className="font-semibold truncate text-gray-900 dark:text-gray-100 mb-2">
-                        {meal.title || "Untitled Meal"}
-                      </p>
+                        <Link href={`/meals/${meal.id}`}>
+                          <div className="rounded-xl p-3 sm:p-4 shadow-sm border bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-600 transition-all duration-150 hover:scale-[1.01] active:scale-[0.98] cursor-pointer">
+                            <div className="flex items-center gap-3 sm:gap-4">
+                              {meal.image_url ? (
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex-shrink-0">
+                                  <img
+                                    src={meal.image_url}
+                                    alt={meal.title || "Meal"}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <span className="text-xl sm:text-2xl">🍽️</span>
+                                </div>
+                              )}
+                              <div className="flex flex-col flex-1 min-w-0">
+                                <p className="font-semibold truncate text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-1.5 sm:mb-2">
+                                  {meal.title || "Untitled Meal"}
+                                </p>
 
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {typeof meal.gut_score === "number" && (
-                          <ScoreChip label="Gut" score={meal.gut_score} meta={gutMeta} />
-                        )}
-                        {typeof meal.mental_score === "number" && (
-                          <ScoreChip label="Mind" score={meal.mental_score} meta={mindMeta} />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+                                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                  {typeof meal.gut_score === "number" && (
+                                    <ScoreChip label="Gut" score={meal.gut_score} meta={gutMeta} />
+                                  )}
+                                  {typeof meal.mental_score === "number" && (
+                                    <ScoreChip label="Mind" score={meal.mental_score} meta={mindMeta} />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
             </motion.div>
           );
         })}
@@ -225,7 +225,7 @@ function ScoreChip({
 }) {
   return (
     <div
-      className={`px-3 py-1 rounded-full text-xs font-semibold border ${meta.background} ${meta.border}`}
+      className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold border ${meta.background} ${meta.border}`}
       style={{ color: meta.color }}
     >
       {label}: {score}% · {meta.label}

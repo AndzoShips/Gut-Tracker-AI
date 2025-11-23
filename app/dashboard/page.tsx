@@ -371,14 +371,14 @@ export default function DashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="max-w-6xl mx-auto px-4 py-6"
+            className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6"
           >
           <HomeHeader selectedDate={selectedDate} onDateChange={setSelectedDate} />
 
           {/* Two Column Layout: Left (Target & Metrics) and Right (Meals) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {/* Left Column */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <WellnessProgressCard
                 currentScore={metrics.overallScore || 0}
                 targetScore={78}
@@ -401,7 +401,7 @@ export default function DashboardPage() {
                 <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wide">
                   Your Daily Metrics
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <MetricCard
               title="Mood Stability"
               percentage={metrics.moodStability.percentage}
@@ -541,14 +541,14 @@ export default function DashboardPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-            className="fixed bottom-6 right-6 z-50"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
           >
             <Button
               onClick={() => setShowScanModal(true)}
-              className="w-14 h-14 rounded-full"
+              className="w-16 h-16 sm:w-14 sm:h-14 rounded-full shadow-lg active:scale-95 transition-transform"
               aria-label="Add meal"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </Button>

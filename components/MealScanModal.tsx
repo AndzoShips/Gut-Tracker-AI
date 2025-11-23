@@ -61,59 +61,59 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
       <Modal
         open={isOpen}
         onClose={(open) => !open && onClose()}
-        className="!max-w-sm bg-transparent dark:bg-transparent"
+        className="!max-w-[95vw] sm:!max-w-sm bg-transparent dark:bg-transparent"
         body={{
           children: (
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-xl space-y-6">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 sm:p-6 shadow-xl space-y-4 sm:space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-green-500 uppercase tracking-widest">Scan</p>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add Your Meal</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Add Your Meal</h2>
                 </div>
                 <button
                   onClick={onClose}
                   aria-label="Close scan modal"
-                  className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-4">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-3 sm:p-4">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Choose how you'd like to add your meal. Take a live photo or upload one from your gallery.
                 </p>
               </div>
 
               <div className="grid gap-3">
-                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
                   <Button
                     onClick={handleCameraClick}
-                    className="w-full flex flex-col gap-1 py-6 border-gray-300 dark:border-gray-600"
+                    className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
                   >
-                    <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+                    <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="text-lg font-semibold">Take Photo</span>
+                      <span className="text-base sm:text-lg font-semibold">Take Photo</span>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Use your device camera</p>
                   </Button>
                 </div>
 
-                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
                   <Button
                     onClick={handleUploadClick}
-                    className="w-full flex flex-col gap-1 py-6 border-gray-300 dark:border-gray-600"
+                    className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
                   >
-                    <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+                    <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
-                      <span className="text-lg font-semibold">Upload Image</span>
+                      <span className="text-base sm:text-lg font-semibold">Upload Image</span>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Choose from your library</p>
                   </Button>

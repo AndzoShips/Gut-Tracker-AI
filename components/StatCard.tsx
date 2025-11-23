@@ -61,13 +61,13 @@ export default function StatCard({ title, value, icon, index = 0 }: StatCardProp
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <div className="rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 flex flex-col items-center">
-        <div className="relative w-24 h-24 mb-3">
-          <svg className="transform -rotate-90 w-24 h-24">
+      <div className="rounded-xl p-3 sm:p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 flex flex-col items-center">
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 mb-2 sm:mb-3">
+          <svg className="transform -rotate-90 w-full h-full">
             <circle
-              cx="48"
-              cy="48"
-              r="40"
+              cx="50%"
+              cy="50%"
+              r="40%"
               stroke="currentColor"
               strokeWidth="8"
               fill="none"
@@ -77,9 +77,9 @@ export default function StatCard({ title, value, icon, index = 0 }: StatCardProp
               }}
             />
             <circle
-              cx="48"
-              cy="48"
-              r="40"
+              cx="50%"
+              cy="50%"
+              r="40%"
               stroke={statusColor}
               strokeWidth="8"
               fill="none"
@@ -90,13 +90,13 @@ export default function StatCard({ title, value, icon, index = 0 }: StatCardProp
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div
-              className="text-2xl mb-1"
+              className="text-xl sm:text-2xl mb-0.5 sm:mb-1"
               style={{ color: statusColor }}
             >
               {icon}
             </div>
             <span
-              className="text-lg font-bold"
+              className="text-base sm:text-lg font-bold"
               style={{ color: statusColor }}
             >
               {displayValue}%
@@ -104,7 +104,7 @@ export default function StatCard({ title, value, icon, index = 0 }: StatCardProp
           </div>
         </div>
         <div className="text-center">
-          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</p>
+          <p className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 mb-0.5 sm:mb-1">{title}</p>
           <p className="text-xs text-gray-600 dark:text-gray-400">{label}</p>
         </div>
       </div>

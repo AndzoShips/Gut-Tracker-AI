@@ -15,8 +15,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Whop App",
-	description: "My Whop App",
+	title: "Gut Tracker AI",
+	description: "Track how your meals affect your gut and mind",
+};
+
+export const viewport = {
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 5,
+	userScalable: true,
 };
 
 export default function RootLayout({

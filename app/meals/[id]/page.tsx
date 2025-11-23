@@ -113,25 +113,26 @@ export default function MealDetailPage() {
           <img
             src={meal.image_url}
             alt={meal.title || "Meal"}
-            className="w-full h-80 object-cover"
+            className="w-full h-48 sm:h-64 md:h-80 object-cover"
           />
         )}
         <button
           onClick={() => router.back()}
-          className="absolute top-4 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
+          className="absolute top-3 left-3 sm:top-4 sm:left-4 w-12 h-12 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+          aria-label="Go back"
         >
-          <svg className="w-6 h-6 text-gray-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-5 sm:h-5 text-gray-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         {meal.overall_score !== undefined && (
-          <div className="absolute top-4 right-4 bg-secondary text-white px-3 py-1 rounded-lg text-3 font-bold">
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-secondary text-white px-2.5 sm:px-3 py-1 rounded-lg text-sm sm:text-base font-bold">
             ★ {meal.overall_score}%
           </div>
         )}
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Meal Title */}
         {meal.title && (
           <div className="bg-gradient-to-r from-gray-a2 to-gray-a3 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
@@ -157,7 +158,7 @@ export default function MealDetailPage() {
           meal.energy_score !== undefined || meal.digestion_score !== undefined) && (
           <div className="bg-gray-a1 -mx-4 px-4 py-6">
             <h3 className="text-6 font-bold text-gray-12 mb-4">Wellness Impact Scores</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               {meal.mood_score !== undefined && (
                 <div className="bg-white rounded-2xl p-4 border border-gray-200 dark:border-gray-600 flex flex-col items-center">
                   <div className="relative w-24 h-24 mb-2">

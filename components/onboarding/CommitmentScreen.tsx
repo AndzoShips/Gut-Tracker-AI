@@ -49,9 +49,10 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
       <div className="mb-8">
         <IconButton
           onClick={onBack}
-          className="mb-6"
+          className="mb-6 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center active:scale-95 transition-transform"
+          aria-label="Go back"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </IconButton>
@@ -65,37 +66,37 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
           <div className="w-2 h-2 rounded-full opacity-30 bg-gray-400 dark:bg-gray-500"></div>
         </div>
 
-        <h2 className="text-4xl font-bold mb-2 text-gray-900 dark:text-gray-100">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-gray-900 dark:text-gray-100">
           How committed are you?
         </h2>
-        <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
+        <p className="text-sm sm:text-base mt-2 text-gray-600 dark:text-gray-400">
           Your dedication helps us provide the most accurate and supportive guidance.
         </p>
       </div>
 
       {/* Options */}
-      <div className="space-y-3 mb-8">
+      <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
         {commitments.map((commitment) => (
           <Button
             key={commitment.id}
             onClick={() => handleSelect(commitment.id)}
-            className="w-full text-left p-4"
+            className="w-full text-left p-4 sm:p-5 min-h-[72px] sm:min-h-[80px] active:scale-[0.98] transition-transform"
           >
-            <div className="flex items-center gap-4">
-              <span className="text-4xl">{commitment.emoji}</span>
-              <div className="flex flex-col flex-1">
-                <p className="font-semibold mb-1">{commitment.title}</p>
-                <p className="text-sm">{commitment.description}</p>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <span className="text-3xl sm:text-4xl flex-shrink-0">{commitment.emoji}</span>
+              <div className="flex flex-col flex-1 min-w-0">
+                <p className="font-semibold mb-0.5 sm:mb-1 text-sm sm:text-base">{commitment.title}</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{commitment.description}</p>
               </div>
               <div
-                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
                   selected === commitment.id
                     ? "border-current bg-current"
                     : "border-current opacity-30"
                 }`}
               >
                 {selected === commitment.id && (
-                  <div className="w-2 h-2 rounded-full bg-current"></div>
+                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-current"></div>
                 )}
               </div>
             </div>
@@ -107,7 +108,7 @@ export default function CommitmentScreen({ selectedCommitment, onNext, onBack }:
       <Button
         onClick={handleNext}
         disabled={!selected}
-        className="w-full"
+        className="w-full min-h-[48px] font-semibold active:scale-[0.98] transition-transform"
       >
         Next
       </Button>

@@ -107,9 +107,10 @@ export default function MealsPage() {
       <div className="bg-white border-b border-gray-a4 px-4 py-4 flex items-center justify-center relative">
         <button
           onClick={() => router.back()}
-          className="absolute left-4 top-1/2 -translate-y-1/2"
+          className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center active:scale-95 transition-transform"
+          aria-label="Go back"
         >
-          <svg className="w-6 h-6 text-gray-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-5 sm:h-5 text-gray-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -125,7 +126,7 @@ export default function MealsPage() {
             const nextIndex = (currentIndex + 1) % options.length;
             setSortBy(options[nextIndex]);
           }}
-          className="w-full bg-white rounded-xl px-4 py-3 border border-gray-a4 flex items-center gap-3"
+          className="w-full bg-white rounded-xl px-4 py-3 border border-gray-a4 flex items-center gap-3 min-h-[48px] active:scale-[0.98] transition-transform"
         >
           <svg className="w-5 h-5 text-gray-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />

@@ -19,14 +19,14 @@ export default function WelcomeScreen({ onNext }: WelcomeScreenProps) {
       </div>
 
       {/* Content */}
-      <div className="space-y-6 mb-12">
-        <h1 className="text-6xl font-bold leading-tight text-gray-900 dark:text-gray-100">
+      <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12 px-4">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight text-gray-900 dark:text-gray-100">
           Welcome
         </h1>
-        <h2 className="text-4xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
           Your Gut is Your Second Brain.
         </h2>
-        <p className="text-base leading-relaxed max-w-sm mx-auto text-gray-600 dark:text-gray-400">
+        <p className="text-sm sm:text-base leading-relaxed max-w-sm mx-auto text-gray-600 dark:text-gray-400">
           What you eat shapes how you think, feel, and perform. Let's discover how your meals affect your mood, focus, and overall well-being.
         </p>
       </div>
@@ -34,7 +34,7 @@ export default function WelcomeScreen({ onNext }: WelcomeScreenProps) {
       {/* Button */}
       <Button
         onClick={onNext}
-        className="w-full max-w-xs"
+        className="w-full max-w-xs min-h-[48px] font-semibold active:scale-[0.98] transition-transform"
       >
         Let's Begin
       </Button>

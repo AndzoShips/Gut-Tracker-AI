@@ -265,7 +265,7 @@ export default function MealAnalysisModal({
     <Modal
       open={isOpen}
       onClose={(open) => !open && !saving && !loading && handleClose()}
-      className="!max-w-2xl dark:!bg-gray-800"
+      className="!max-w-[95vw] sm:!max-w-2xl dark:!bg-gray-800"
       header={loading ? {
         title: "Analyzing Your Meal",
         closeButton: false,
@@ -280,7 +280,7 @@ export default function MealAnalysisModal({
         children: (
           <div className="max-h-[85vh] overflow-y-auto hide-scrollbar bg-white dark:bg-gray-800">
             {loading && (
-              <div className="space-y-6 p-8">
+              <div className="space-y-6 p-6 sm:p-8">
                 <div className="flex flex-col items-center mb-8">
                   {/* Animated Icon */}
                   <div className="relative w-24 h-24 mb-6">
@@ -346,7 +346,7 @@ export default function MealAnalysisModal({
             )}
 
             {error && (
-              <div className="flex flex-col items-center p-8">
+              <div className="flex flex-col items-center p-6 sm:p-8">
                 <p className="text-4xl mb-4">⚠️</p>
                 <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Analysis Failed</h3>
                 <p className="text-sm mb-6 text-gray-600 dark:text-gray-400">{error}</p>
@@ -364,20 +364,22 @@ export default function MealAnalysisModal({
             {result && !loading && !error && (
               <div className="space-y-6">
                 {/* Header with Back and Share Buttons */}
-                <div className="flex items-center justify-between px-6 pt-4">
+                <div className="flex items-center justify-between px-4 sm:px-6 pt-4">
                   <button
                     onClick={handleClose}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+                    className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active:scale-95 transition-all"
+                    aria-label="Go back"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 px-2 text-center flex-1 truncate">
                     {result.title || "Meal Analysis"}
                   </h2>
                   <button
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+                    className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active:scale-95 transition-all"
+                    aria-label="Share meal"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -391,21 +393,21 @@ export default function MealAnalysisModal({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="relative px-6"
+                    className="relative px-4 sm:px-6"
                   >
                     <img
                       src={image}
                       alt={result.title || "Meal"}
-                      className="w-full h-64 object-cover rounded-xl"
+                      className="w-full h-48 sm:h-64 object-cover rounded-xl"
                     />
                     {result.overall_score !== undefined && (
                       <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.3, type: "spring" }}
-                        className="absolute bottom-4 right-10 px-4 py-2 rounded-xl text-lg font-bold flex items-center gap-2 shadow-2xl backdrop-blur-md bg-green-500 text-white"
+                        className="absolute bottom-3 right-4 sm:bottom-4 sm:right-10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-base sm:text-lg font-bold flex items-center gap-1.5 sm:gap-2 shadow-2xl backdrop-blur-md bg-green-500 text-white"
                       >
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                         <span>{result.overall_score}%</span>
@@ -416,13 +418,13 @@ export default function MealAnalysisModal({
 
                 {/* Detected Ingredients */}
                 {result.detected_ingredients && result.detected_ingredients.length > 0 && (
-                  <div className="px-6">
+                  <div className="px-4 sm:px-6">
                     <h3 className="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">Detected Ingredients</h3>
                     <div className="flex flex-wrap gap-2">
                       {result.detected_ingredients.slice(0, 6).map((ingredient: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-3 py-1.5 rounded-full bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200 dark:border-gray-600 text-sm text-gray-900 dark:text-gray-100"
+                          className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200 dark:border-gray-600 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
                         >
                           {ingredient}
                         </span>
@@ -432,9 +434,9 @@ export default function MealAnalysisModal({
                 )}
 
                 {/* Wellness Impact Scores */}
-                <div className="px-6 pb-6">
-                  <h3 className="text-sm font-semibold mb-4 text-gray-900 dark:text-gray-100">Wellness Impact Scores</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                  <h3 className="text-sm font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">Wellness Impact Scores</h3>
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
                     {result.mood_score !== undefined && (
                       <StatCard
                         title="Mood"
@@ -472,7 +474,7 @@ export default function MealAnalysisModal({
 
                 {/* Wellness Category Insights - Always visible */}
                 {result.wellness_insights && (
-                  <div className="px-6 space-y-4 pb-4">
+                  <div className="px-4 sm:px-6 space-y-4 pb-4">
                     {/* Mood Insight */}
                     {result.mood_score !== undefined && result.wellness_insights.mood_insight && (
                       <div>
@@ -480,7 +482,7 @@ export default function MealAnalysisModal({
                           <span className="text-lg">😊</span>
                           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Mood Insight</span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.mood_insight}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7 break-words">{result.wellness_insights.mood_insight}</p>
                       </div>
                     )}
 
@@ -491,7 +493,7 @@ export default function MealAnalysisModal({
                           <span className="text-lg">🧠</span>
                           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Mental Clarity Insight</span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.mental_clarity_insight}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7 break-words">{result.wellness_insights.mental_clarity_insight}</p>
                       </div>
                     )}
 
@@ -502,7 +504,7 @@ export default function MealAnalysisModal({
                           <span className="text-lg">⚡</span>
                           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Energy Insight</span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.energy_insight}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7 break-words">{result.wellness_insights.energy_insight}</p>
                       </div>
                     )}
 
@@ -513,26 +515,26 @@ export default function MealAnalysisModal({
                           <span className="text-lg">❤️</span>
                           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">Digestion Insight</span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7">{result.wellness_insights.digestion_insight}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 pl-7 break-words">{result.wellness_insights.digestion_insight}</p>
                       </div>
                     )}
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="px-6 pb-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+                <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-600">
                   <div className="flex flex-col gap-3">
                     {result.id ? (
                       <Button
                         onClick={handleViewDetails}
-                        className="w-full justify-center font-semibold"
+                        className="w-full justify-center font-semibold min-h-[48px] active:scale-[0.98] transition-transform"
                       >
                         View Details
                       </Button>
                     ) : saved ? (
                       <Button
                         disabled
-                        className="w-full justify-center font-semibold"
+                        className="w-full justify-center font-semibold min-h-[48px]"
                       >
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -543,7 +545,7 @@ export default function MealAnalysisModal({
                       <Button
                         onClick={handleSaveMeal}
                         disabled={saving}
-                        className="w-full justify-center font-semibold"
+                        className="w-full justify-center font-semibold min-h-[48px] active:scale-[0.98] transition-transform"
                       >
                         {saving ? (
                           <>
@@ -557,7 +559,7 @@ export default function MealAnalysisModal({
                     )}
                     <Button
                       onClick={handleClose}
-                      className="w-full justify-center font-semibold"
+                      className="w-full justify-center font-semibold min-h-[48px] active:scale-[0.98] transition-transform"
                     >
                       {result.id || saved ? "Done" : "Close"}
                     </Button>
@@ -571,5 +573,11 @@ export default function MealAnalysisModal({
     />
   );
 }
+
+
+
+
+
+
 
 
