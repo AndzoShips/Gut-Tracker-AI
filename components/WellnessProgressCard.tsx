@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Progress, IconButton } from "@whop/frosted-ui";
-import GutMindBalanceInfoModal from "./GutMindBalanceInfoModal";
+import { Progress } from "@whop/frosted-ui";
 
 interface WellnessProgressCardProps {
   currentScore: number;
@@ -20,7 +19,6 @@ export default function WellnessProgressCard({
   trendMessage,
 }: WellnessProgressCardProps) {
   const [displayScore, setDisplayScore] = useState(0);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   // Animate score change
   useEffect(() => {
@@ -63,16 +61,8 @@ export default function WellnessProgressCard({
     >
       <div className="flex flex-col gap-4">
         {/* Header */}
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Gut-Mind Balance Index</h2>
-          <IconButton
-            onClick={() => setShowInfoModal(true)}
-            aria-label="Learn more about Gut-Mind Balance Index"
-          >
-            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </IconButton>
         </div>
 
           {/* Main Circular Indicator (Wellness Score) */}
@@ -129,13 +119,6 @@ export default function WellnessProgressCard({
                 Keep your index above 70 for 5 days to achieve Gut Harmony 🌿
               </p>
         </div>
-
-        {/* Info Modal */}
-        <GutMindBalanceInfoModal
-          isOpen={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-          isFirstTime={false}
-        />
     </motion.div>
   );
 }
