@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { Modal, Button, IconButton } from "@whop/frosted-ui";
+import { Modal, Button } from "@whop/frosted-ui";
 
 interface MealScanModalProps {
   isOpen: boolean;
@@ -10,9 +9,6 @@ interface MealScanModalProps {
 }
 
 export default function MealScanModal({ isOpen, onClose, onImageSelected }: MealScanModalProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
-
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
@@ -48,14 +44,6 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
     reader.readAsDataURL(file);
   };
 
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleCameraClick = () => {
-    cameraInputRef.current?.click();
-  };
-
   return (
     <>
       <Modal
@@ -89,56 +77,54 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
 
               <div className="grid gap-3">
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
-                  <Button
-                    onClick={handleCameraClick}
-                    className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
-                  >
-                    <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <span className="text-base sm:text-lg font-semibold">Take Photo</span>
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Use your device camera</p>
-                  </Button>
+                  <div className="relative">
+                    <Button
+                      className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
+                    >
+                      <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span className="text-base sm:text-lg font-semibold">Take Photo</span>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Use your device camera</p>
+                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
-                  <Button
-                    onClick={handleUploadClick}
-                    className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
-                  >
-                    <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                      <span className="text-base sm:text-lg font-semibold">Upload Image</span>
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Choose from your library</p>
-                  </Button>
+                  <div className="relative">
+                    <Button
+                      className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
+                    >
+                      <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span className="text-base sm:text-lg font-semibold">Upload Image</span>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Choose from your library</p>
+                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           ),
         }}
-      />
-
-      {/* Hidden file inputs */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-      <input
-        ref={cameraInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onChange={handleFileSelect}
-        className="hidden"
       />
     </>
   );
