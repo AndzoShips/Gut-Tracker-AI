@@ -1,6 +1,5 @@
 "use client";
 
-import { useId } from "react";
 import { Modal, Button } from "@whop/frosted-ui";
 
 interface MealScanModalProps {
@@ -10,8 +9,6 @@ interface MealScanModalProps {
 }
 
 export default function MealScanModal({ isOpen, onClose, onImageSelected }: MealScanModalProps) {
-  const cameraInputId = useId();
-  const galleryInputId = useId();
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
@@ -80,9 +77,8 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
 
               <div className="grid gap-3">
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
-                  <label htmlFor={cameraInputId} className="block cursor-pointer">
+                  <div className="relative">
                     <Button
-                      type="button"
                       className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
                     >
                       <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
@@ -94,21 +90,19 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400">Use your device camera</p>
                     </Button>
-                  </label>
-                  <input
-                    id={cameraInputId}
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 sm:p-4">
-                  <label htmlFor={galleryInputId} className="block cursor-pointer">
+                  <div className="relative">
                     <Button
-                      type="button"
                       className="w-full flex flex-col gap-1 py-5 sm:py-6 min-h-[56px] border-gray-300 dark:border-gray-600 active:scale-[0.98] transition-transform"
                     >
                       <div className="flex items-center justify-center gap-2 text-gray-900 dark:text-white">
@@ -119,14 +113,13 @@ export default function MealScanModal({ isOpen, onClose, onImageSelected }: Meal
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400">Choose from your library</p>
                     </Button>
-                  </label>
-                  <input
-                    id={galleryInputId}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
